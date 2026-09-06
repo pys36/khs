@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPP 3 SPM 2026 - PRINSIP PERAKAUNAN KERTAS 1 (TERENGGANU)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .quiz-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 850px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #219150;
+        }
+        .btn-nav {
+            background-color: #2980b9;
+        }
+        .btn-nav:hover {
+            background-color: #1f618d;
+        }
+        .btn-disabled {
+            background-color: #bdc3c7 !important;
+            cursor: not-allowed;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .option-btn {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            margin: 8px 0;
+            width: 100%;
+            text-align: left;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            box-sizing: border-box;
+            line-height: 1.4;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #d5dbdb;
+        }
+        .option-btn.selected-correct {
+            border: 2px solid #27ae60 !important;
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            font-weight: bold;
+        }
+        .option-btn.selected-wrong {
+            border: 2px solid #e74c3c !important;
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            font-weight: bold;
+        }
+        .option-btn.show-correct {
+            border: 2px solid #27ae60 !important;
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .wrong {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .hidden {
+            display: none;
+        }
+        .progress {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        /* Format Jadual Perakaunan Standard */
+        table.acc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        table.acc-table, table.acc-table th, table.acc-table td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+        }
+        table.acc-table th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        
+        .question-box {
+            border: 1px solid #000;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #fff;
+        }
+        
+        .red-text {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        /* Penyesuaian Jadual Pilihan Jawapan */
+        .option-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .option-table th {
+            border: 1px solid #7f8c8d;
+            background-color: #eaeded;
+            padding: 5px;
+            font-size: 13px;
+        }
+        .option-table td {
+            border: 1px solid #7f8c8d;
+            padding: 5px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <!-- Muka Hadapan -->
+    <div id="start-page">
+        <h2>SOALAN PERCUBAAN PRINSIP PERAKAUNAN KERTAS 1 TERENGGANU 2026 - Cikgu Huan Chan Ping</h2>
+        <h3>MODUL PERKEMBANGAN PEMBELAJARAN (MPP 3)</h3>
+        <hr><br>
+        <p style="text-align: center; color: #555;">Sila masukkan maklumat anda untuk memulakan ujian ini.</p>
+        
+        <div class="form-group">
+            <label for="student-name">Nama Murid:</label>
+            <input type="text" id="student-name" placeholder="Contoh: Ahmad Bin Zulkifli">
+        </div>
+        <div class="form-group">
+            <label for="student-class">Tingkatan / Kelas:</label>
+            <input type="text" id="student-class" placeholder="Contoh: 5 Akaun">
+        </div>
+        <button class="btn" style="width:100%; margin-top:10px;" onclick="startQuiz()">Mula Jawab Soalan</button>
+    </div>
+
+    <!-- Halaman Soalan -->
+    <div id="quiz-page" class="hidden">
+        <div class="progress" id="progress-text">Soalan 1 daripada 40</div>
+        <div id="question-text"></div>
+        <div id="options-container"></div>
+        <div id="feedback-container"></div>
+        
+        <!-- Butang Navigasi -->
+        <div class="nav-container">
+            <button id="prev-btn" class="btn btn-nav" onclick="prevQuestion()">Kembali</button>
+            <button id="next-btn" class="btn btn-nav" onclick="nextQuestion()">Seterusnya</button>
+        </div>
+    </div>
+
+    <!-- Muka Akhir Keputusan -->
+    <div id="result-page" class="hidden" style="text-align: center;">
+        <h2>KEPUTUSAN UJIAN</h2>
+        <hr><br>
+        <p style="font-size: 18px;"><strong>Nama:</strong> <span id="res-name"></span></p>
+        <p style="font-size: 18px;"><strong>Kelas:</strong> <span id="res-class"></span></p>
+        <br>
+        <div style="background-color: #e8f8f5; padding: 20px; border-radius: 8px; display: inline-block; width: 80%;">
+            <h3 style="margin: 0; color: #16a085;">Markah Anda:</h3>
+            <p style="font-size: 36px; font-weight: bold; color: #2c3e50; margin: 10px 0;" id="res-score">0 / 40</p>
+            <p style="font-size: 20px; color: #7f8c8d;" id="res-percentage">0%</p>
+        </div>
+        <br><br>
+        <button class="btn" style="width: 100%;" onclick="location.reload()">Cuba Lagi</button>
+    </div>
+</div>
+
+<script>
+const questions = [
+    {
+        q: "Badan yang menggubal piawaian perakaunan di Malaysia ialah",
+        options: ["A MIA", "B CIMA", "C ACCA", "D MASB"],
+        ans: 3
+    },
+    {
+        q: "Mengapakah Jawatankuasa Piawaian Perakaunan Antarabangsa ditubuhkan pada tahun 1973?",
+        options: [
+            "A Mempromosikan profesion perakaunan.",
+            "B Mengawal ekonomi yang sedang berkembang pesat.",
+            "C Menggalakkan penggunaan piawaian asas dalam perakaunan.",
+            "D Memajukan profesion perakaunan melalui latihan dan peperiksaan."
+        ],
+        ans: 2
+    },
+    {
+        q: "Maklumat berikut merujuk kepada Leona Enterprise:<br><br>" +
+           "<div class='question-box'>Pemilik merekod ambilan barang niaga untuk kegunaan peribadi.</div><br>" +
+           "Apakah andaian, prinsip atau batasan yang dipatuhi oleh perniagaan tersebut?",
+        options: ["A Prinsip kos", "B Entiti berasingan", "C Tempoh perakaunan", "D Pengiktirafan hasil dan belanja"],
+        ans: 1
+    },
+    {
+        q: "Sumber modal bagi Koperasi Keluarga Aslam ialah",
+        options: ["A Terbitan saham", "B Tabungan pemilik", "C Sumbangan pekongsi", "D Fi masuk dan jualan saham"],
+        ans: 3
+    },
+    {
+        q: "Manakah merupakan komponen dalam Akaun Perdagangan?",
+        options: ["A Hasil", "B Belanja", "C Kos Jualan", "D Untung Kasar"],
+        ans: 2
+    },
+    {
+        q: "Antara berikut, manakah dikelaskan sebagai Liabiliti Bukan Semasa?<br><br>" +
+           "I Gadai janji dan pinjaman bercagar<br>" +
+           "II Overdraf bank dan faedah atas pinjaman<br>" +
+           "III Hutang dalam tempoh setahun perakaunan<br>" +
+           "IV Hutang melebihi setahun tempoh perakaunan",
+        options: ["A I dan II", "B I dan IV", "C II dan III", "D III dan IV"],
+        ans: 1
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Kedai Perabot Juliet.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Aset (RM)</th><th>Liabiliti (RM)</th><th>Ekuiti Pemilik (RM)</th></tr>" +
+           "<tr><td class='text-center'>(4 500)</td><td class='text-center'>(5 000)</td><td class='text-center'>500</td></tr>" +
+           "</table><br>" +
+           "Urus niaga manakah menunjukkan kesan terhadap persamaan perakaunan di atas?",
+        options: [
+            "A Inventori RM4 500 dijual secara kredit RM5 000.",
+            "B Sebuah rak pameran RM5 000 dijual secara kredit RM4 500.",
+            "C Membayar cek RM4 500 kepada pembekal dan menerima diskaun RM500.",
+            "D Menjual satu set meja makan berkos RM5 000 dengan harga RM4 500 secara tunai."
+        ],
+        ans: 3
+    },
+    {
+        q: "Manakah bukan pasangan Catatan Kontra dan akaun berkaitan?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Catatan Kontra</th><th>Akaun Berkaitan</th></tr><tr><td><strong>A</strong></td><td>Ambilan</td><td>Modal</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Catatan Kontra</th><th>Akaun Berkaitan</th></tr><tr><td><strong>B</strong></td><td>Pulangan masuk</td><td>Jualan</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Catatan Kontra</th><th>Akaun Berkaitan</th></tr><tr><td><strong>C</strong></td><td>Susut nilai kenderaan</td><td>Kenderaan</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Catatan Kontra</th><th>Akaun Berkaitan</th></tr><tr><td><strong>D</strong></td><td>Peruntukan hutang ragu</td><td>Akaun Belum Terima</td></tr></table>"
+        ],
+        ans: 2
+    },
+    {
+        q: "Maklumat berikut merupakan ciri-ciri suatu dokumen.<br><br>" +
+           "• Dokumen dikeluarkan oleh pihak bank.<br>" +
+           "• Bertujuan memberitahu kepada pemilik akaun bahawa pihak bank telah mengurangkan akaun dengan jumlah tertentu.<br><br>" +
+           "Apakah dokumen tersebut?",
+        options: ["A Makluman Debit", "B Makluman Kredit", "C Resit Perbankan Dalam Talian", "D Slip Transaksi Perbankan Elektronik"],
+        ans: 0
+    },
+    {
+        q: "Apakah catatan bergu dalam Jurnal Am untuk merekodkan diskaun dibatalkan akibat cek daripada Haifa yang dipulangkan dengan tanda \"Rujuk Penyuruh Bayar\"?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>A</strong></td><td>Akaun Diskaun diberi</td><td>Akaun Haifa</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>B</strong></td><td>Akaun Haifa</td><td>Akaun Diskaun diberi</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>C</strong></td><td>Akaun Diskaun diterima</td><td>Akaun Haifa</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>D</strong></td><td>Akaun Haifa</td><td>Akaun Diskaun diterima</td></tr></table>"
+        ],
+        ans: 1
+    },
+    {
+        q: "Antara berikut, urus niaga manakah akan direkodkan ke dalam Jurnal Khas?<br><br>" +
+           "I Pelanggan memulangkan barang niaga yang rosak.<br>" +
+           "II Ambil barang niaga untuk kegunaan perniagaan.<br>" +
+           "III Jual barang niaga secara kredit.<br>" +
+           "IV Beli barang niaga dengan cek.",
+        options: ["A I dan II", "B I dan III", "C II dan IV", "D III dan IV"],
+        ans: 1
+    },
+    {
+        q: "Petikan Buku Tunai berikut diperoleh daripada Pasaraya Suria.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th colspan='10' class='text-center'>BUKU TUNAI</th></tr>" +
+           "<tr><th>Tarikh</th><th>Butir</th><th>Disk RM</th><th>Tunai RM</th><th>Bank RM</th><th>Tarikh</th><th>Butir</th><th>Disk RM</th><th>Tunai RM</th><th>Bank RM</th></tr>" +
+           "<tr><td></td><td></td><td></td><td></td><td></td><td>2026 Mac 4</td><td>Anip Bhd.</td><td></td><td>5 000</td><td></td></tr>" +
+           "</table><br>" +
+           "Dokumen manakah digunakan sebagai sumber catatan bagi urus niaga tersebut?",
+        options: ["A Slip daftar tunai", "B Keratan cek", "C Bil tunai", "D Resit"],
+        ans: 3
+    },
+    {
+        q: "Manakah antara akaun berikut merupakan akaun nominal?<br><br>" +
+           "I Akaun Promosi<br>" +
+           "II Akaun Alat tulis<br>" +
+           "III Akaun Belum Bayar<br>" +
+           "IV Akaun Insurans Prabayar",
+        options: ["A I dan II", "B I dan IV", "C II dan III", "D III dan IV"],
+        ans: 0
+    },
+    {
+        q: "Pada 6 Mei 2026, KS Mini Market telah mengambil barang niaga RM250 untuk didermakan kepada Rumah Kasih Ihsan.<br><br>" +
+           "Apakah catatan bergu bagi urus niaga tersebut?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>A</strong></td><td>Rumah Kasih Ihsan</td><td>Derma</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>B</strong></td><td>Ambilan</td><td>Belian</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>C</strong></td><td>Ambilan</td><td>Rumah Kasih Ihsan</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Debit</th><th>Kredit</th></tr><tr><td><strong>D</strong></td><td>Derma</td><td>Belian</td></tr></table>"
+        ],
+        ans: 3
+    },
+    {
+        q: "Butiran yang terdapat dalam Akaun Kawalan Belum Terima ialah<br><br>" +
+           "I Hutang ragu<br>" +
+           "II Pulangan masuk<br>" +
+           "III Diskaun diterima<br>" +
+           "IV Diskaun diberi dibatalkan",
+        options: ["A I dan III", "B I dan IV", "C II dan III", "D II dan IV"],
+        ans: 3
+    },
+    {
+        q: "Berikut merupakan petikan Imbangan Duga Perniagaan Harmoni:<br><br>" +
+           "<strong>Perniagaan Harmoni</strong><br>" +
+           "<strong>Imbangan Duga pada 30 September 2025 (petikan)</strong>" +
+           "<table class='acc-table'>" +
+           "<tr><th></th><th>Debit RM</th><th>Kredit RM</th></tr>" +
+           "<tr><td>Jualan</td><td></td><td>17 890</td></tr>" +
+           "<tr><td>X</td><td>4 600</td><td></td></tr>" +
+           "<tr><td>Y</td><td></td><td>670</td></tr>" +
+           "</table><br>" +
+           "Apakah X dan Y?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>X</th><th>Y</th></tr><tr><td><strong>A</strong></td><td>Iklan</td><td>Akaun Belum Bayar</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>X</th><th>Y</th></tr><tr><td><strong>B</strong></td><td>Modal</td><td>Peruntukan hutang ragu</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>X</th><th>Y</th></tr><tr><td><strong>C</strong></td><td>Belian</td><td>Pulangan jualan</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>X</th><th>Y</th></tr><tr><td><strong>D</strong></td><td>Akaun Belum Terima</td><td>Ambilan</td></tr></table>"
+        ],
+        ans: 0
+    },
+    {
+        q: "Maklumat di bawah diperoleh daripada buku perakaunan Syarikat Zain bagi tahun berakhir 31 Mac 2026.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><td>Jualan</td><td class='text-right'>RM42 350</td></tr>" +
+           "<tr><td>Belian</td><td class='text-right'>RM28 670</td></tr>" +
+           "<tr><td>Pulangan masuk</td><td class='text-right'>RM1 490</td></tr>" +
+           "<tr><td>Pulangan keluar</td><td class='text-right'>RM1 180</td></tr>" +
+           "<tr><td>Angkutan keluar</td><td class='text-right'>RM1 230</td></tr>" +
+           "<tr><td>Angkutan masuk</td><td class='text-right'>RM540</td></tr>" +
+           "</table><br>" +
+           "Berapakah jualan bersih dan kos belian?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Jualan Bersih</th><th>Kos Belian</th></tr><tr><td><strong>A</strong></td><td>RM40 860</td><td>RM27 720</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Jualan Bersih</th><th>Kos Belian</th></tr><tr><td><strong>B</strong></td><td>RM40 860</td><td>RM28 030</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Jualan Bersih</th><th>Kos Belian</th></tr><tr><td><strong>C</strong></td><td>RM41 170</td><td>RM28 030</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Jualan Bersih</th><th>Kos Belian</th></tr><tr><td><strong>D</strong></td><td>RM41 170</td><td>RM27 720</td></tr></table>"
+        ],
+        ans: 1
+    },
+    {
+        q: "Apakah yang menambahkan modal perniagaan?",
+        options: ["A Rugi kasar", "B Rugi bersih", "C Untung kasar", "D Untung bersih"],
+        ans: 3
+    },
+    {
+        q: "Semasa proses catatan penutupan, komponen jualan bersih akan dipindahkan ke dalam",
+        options: ["A Imbangan Duga", "B Akaun Untung Rugi", "C Akaun Perdagangan", "D Penyata Kedudukan Kewangan"],
+        ans: 2
+    },
+    {
+        q: "Antara berikut, manakah merupakan liabiliti perniagaan?",
+        options: ["A Simpanan tetap", "B Insurans prabayar", "C Deposit sewa diterima", "D Deposit kadar bayaran"],
+        ans: 2
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Kedai Perabot Zam pada 31 Mac 2026.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>Debit (RM)</th><th>Kredit (RM)</th></tr>" +
+           "<tr><td>Akaun Belum Terima</td><td class='text-right'>8 000</td><td></td></tr>" +
+           "<tr><td>Hutang lapuk</td><td class='text-right'>300</td><td></td></tr>" +
+           "<tr><td>Peruntukan hutang ragu</td><td></td><td class='text-right'>200</td></tr>" +
+           "</table><br>" +
+           "Pada 31 Mac 2026, peruntukan hutang ragu diselaraskan pada kadar 5% atas Akaun Belum Terima.<br><br>" +
+           "Hitung jumlah peruntukan hutang ragu yang direkodkan dalam Penyata Kedudukan Kewangan.",
+        options: ["A RM200", "B RM385", "C RM390", "D RM400"],
+        ans: 3
+    },
+    {
+        q: "Cassandra Berhad telah membeli sebuah mesin berharga RM85 000. Penggunaan mesin tersebut dijangka selama 10 tahun. Pada akhir tempoh perakaunan, nilai skrap mesin tersebut dianggarkan sebanyak RM10 500.<br><br>" +
+           "Berapakah susut nilai tahunan mesin tersebut?",
+        options: ["A RM8 500", "B RM7 450", "C RM9 550", "D RM10 500"],
+        ans: 1
+    },
+    {
+        q: "Cik Mary tidak menyimpan buku akaun dengan lengkap. Maklumat berikut diperoleh pada 31 Disember 2025.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>2025</th><th></th><th>RM</th></tr>" +
+           "<tr><td>Jan 1</td><td>Utiliti belum bayar</td><td class='text-right'>480</td></tr>" +
+           "<tr><td>Dis 31</td><td>Jumlah pembayaran utiliti</td><td class='text-right'>3 460</td></tr>" +
+           "<tr><td></td><td>Utiliti prabayar</td><td class='text-right'>160</td></tr>" +
+           "</table><br>" +
+           "<span class='red-text'>Hitung nilai Utiliti yang akan direkod dalam Akaun Untung Rugi.</span>",
+        options: ["A RM2 820", "B RM3 140", "C RM3 780", "D RM4 100"],
+        ans: 1
+    },
+    {
+        q: "Kesilapan berikut telah dikesan dalam buku perniagaan Kedai Alat Tulis Bibi.<br><br>" +
+           "<div class='question-box'>Belian RM5 400 daripada Hana tersalah rekod ke dalam Akaun Hanan.</div><br>" +
+           "Apakah jenis kesilapan yang berlaku?",
+        options: ["A Kesilapan komisen", "B Kesilapan songsang", "C Kesilapan ketinggalan", "D Kesilapan saling mengimbangi"],
+        ans: 0
+    },
+    {
+        q: "Nyatakan kesan ke atas Akaun Perdagangan dan Untung Rugi selepas pembetulan kesilapan berikut dibuat.<br><br>" +
+           "<div class='question-box'>Pulangan jualan dan pulangan belian masing-masing terlebih rekod RM190.</div>",
+        options: [
+            "A Untung kasar berkurang.",
+            "B Untung kasar bertambah.",
+            "C Untung bersih bertambah.",
+            "D Untung bersih tiada kesan."
+        ],
+        ans: 3
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada buku perniagaan MAS Enterprise.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>RM</th></tr>" +
+           "<tr><td>Insurans prabayar</td><td class='text-right'>350</td></tr>" +
+           "<tr><td>Overdraf bank</td><td class='text-right'>2 820</td></tr>" +
+           "<tr><td>Akaun Belum Terima</td><td class='text-right'>4 100</td></tr>" +
+           "<tr><td>Inventori akhir</td><td class='text-right'>2 680</td></tr>" +
+           "<tr><td>Sewa belum terima</td><td class='text-right'>860</td></tr>" +
+           "</table><br>" +
+           "Berapakah Nisbah Ujian Asid Mas Enterprise?",
+        options: ["A 2.83:1", "B 1.94:1", "C 1.88:1", "D 0.93:1"],
+        ans: 2
+    },
+    {
+        q: "Rumus berikut digunakan oleh perniagaan yang mengamalkan rekod tak lengkap.<br><br>" +
+           "<div class='question-box' style='text-align:center;'><strong>Z = Jumlah aset akhir - Jumlah liabiliti akhir</strong></div><br>" +
+           "Apakah Z?",
+        options: ["A Modal awal", "B Modal akhir", "C Modal kerja", "D Modal tambahan"],
+        ans: 1
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Perniagaan Muhammad yang tidak mengamalkan sistem catatan bergu.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th></th><th>1 Januari 2025 (RM)</th><th>31 Disember 2025 (RM)</th></tr>" +
+           "<tr><td>Sewa belum bayar</td><td class='text-right'>600</td><td class='text-right'>-</td></tr>" +
+           "<tr><td>Sewa prabayar</td><td class='text-right'>-</td><td class='text-right'>1 200</td></tr>" +
+           "</table><br>" +
+           "<strong>Maklumat tambahan:</strong><br>Sewa yang telah dibayar sepanjang tahun kewangan ialah RM9 000.<br><br>" +
+           "Hitung jumlah sewa yang akan dicatatkan dalam Akaun Untung Rugi.",
+        options: ["A RM7 200", "B RM8 400", "C RM9 600", "D RM10 800"],
+        ans: 0
+    },
+    {
+        q: "Petikan Buku Tunai dan Penyata Bank berikut diambil daripada Megah Jaya Enterprise bagi bulan Mei 2026.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th colspan='7' class='text-center'>Buku Tunai (Ruangan bank)</th></tr>" +
+           "<tr><th>Tarikh</th><th>Butiran</th><th>RM</th><th>Tarikh</th><th>Butiran</th><th>No. Cek</th><th>RM</th></tr>" +
+           "<tr><td></td><td></td><td></td><td>2026 Mei 3</td><td>Belian</td><td>200113</td><td class='text-right'>1 447</td></tr>" +
+           "</table><br>" +
+           "<strong>Penyata Bank</strong>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Tarikh</th><th>Butiran</th><th>No. Cek</th><th>Debit RM</th><th>Kredit RM</th><th>Baki RM</th></tr>" +
+           "<tr><td>2026 Mei 6</td><td>Cek</td><td>200113</td><td class='text-right'>1 477</td><td></td><td></td></tr>" +
+           "</table><br>" +
+           "Berapakah amaun yang direkod ke dalam Buku Tunai kemaskini?",
+        options: ["A Debit RM30", "B Kredit RM30", "C Debit RM1 447", "D Kredit RM1 477"],
+        ans: 1
+    },
+    {
+        q: "Apakah yang menyebabkan Belanjawan Tunai mengalami kurangan tunai?",
+        options: [
+            "A Perniagaan mengalami kerugian.",
+            "B Perniagaan tidak mampu menjelaskan hutang.",
+            "C Berlaku penyelewengan dalam pengurusan tunai.",
+            "D Jumlah pembayaran melebihi jumlah penerimaan."
+        ],
+        ans: 3
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Perkongsian Aiy dan Reen pada 31 Mac 2026.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>RM</th></tr>" +
+           "<tr><td>Untung bersih</td><td class='text-right'>47 250</td></tr>" +
+           "<tr><td>Faedah atas modal</td><td class='text-right'>5 000</td></tr>" +
+           "<tr><td>Faedah atas ambilan</td><td class='text-right'>900</td></tr>" +
+           "</table><br>" +
+           "Berapakah kongsi untung setiap pekongsi Aiy dan Reen jika untung atau rugi dibahagi mengikut nisbah 3:2?",
+        options: [
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Aiy</th><th>Reen</th></tr><tr><td><strong>A</strong></td><td>RM17 260</td><td>RM25 890</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Aiy</th><th>Reen</th></tr><tr><td><strong>B</strong></td><td>RM21 575</td><td>RM21 575</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Aiy</th><th>Reen</th></tr><tr><td><strong>C</strong></td><td>RM25 890</td><td>RM17 260</td></tr></table>",
+            "<table class='option-table'><tr><th style='width:30px;'></th><th style='width:50%;'>Aiy</th><th>Reen</th></tr><tr><td><strong>D</strong></td><td>RM28 350</td><td>RM18 900</td></tr></table>"
+        ],
+        ans: 2
+    },
+    {
+        q: "Apakah faktor yang menyebabkan berlaku kurangan dalam Akaun Modal pekongsi?",
+        options: [
+            "A Sumbangan modal pekongsi terlalu tinggi.",
+            "B Untung realisasi yang diperoleh terlalu tinggi.",
+            "C Nilai aset yang diambil oleh pekongsi rendah.",
+            "D Ambilan yang dibuat oleh pekongsi terlalu banyak."
+        ],
+        ans: 3
+    },
+    {
+        q: "Antara berikut, manakah sebab pembubaran perkongsian?",
+        options: [
+            "A Pekongsi membawa masuk modal tambahan.",
+            "B Pekongsi melabur modal dalam perniagaan lain.",
+            "C Pertukaran entiti perniagaan kepada syarikat berhad.",
+            "D Salah seorang pekongsi mendapat kerugian daripada perkongsian."
+        ],
+        ans: 2
+    },
+    {
+        q: "Pernyataan manakah menerangkan ciri syer biasa?",
+        options: [
+            "A Boleh menerima dividen tertunggak.",
+            "B Kadar dividen bergantung kepada keuntungan syarikat.",
+            "C Tuntutan ke atas aset didahulukan jika berlaku pembubaran.",
+            "D Pemegang syer tidak berhak mengundi dalam mesyuarat agung."
+        ],
+        ans: 1
+    },
+    {
+        q: "Berikut adalah maklumat Syarikat Restu Berhad pada 31 Disember 2025.<br><br>" +
+           "<strong>Modal Diterbitkan dan Berbayar Penuh:</strong><br>" +
+           "200 000 unit 8% Syer Keutamaan RM400 000<br>" +
+           "400 000 unit Syer Biasa RM400 000<br><br>" +
+           "Lembaga pengarah telah mengisytiharkan dividen akhir Syer Biasa 10%.<br><br>" +
+           "Hitung jumlah Dividen Akhir Syer Biasa.",
+        options: ["A RM32 000", "B RM40 000", "C RM72 000", "D RM80 000"],
+        ans: 1
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Akaun Penerimaan dan Pembayaran Kelab Sukan Renang TER pada 30 Jun 2026.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>RM</th></tr>" +
+           "<tr><td>Baki awal</td><td class='text-right'>1 500</td></tr>" +
+           "<tr><td>Yuran Ahli</td><td class='text-right'>300</td></tr>" +
+           "<tr><td>Bayaran masuk</td><td class='text-right'>4 000</td></tr>" +
+           "<tr><td>Kadar bayaran</td><td class='text-right'>150</td></tr>" +
+           "<tr><td>Upah cuci kolam</td><td class='text-right'>200</td></tr>" +
+           "<tr><td>Baki akhir</td><td class='text-center'>M</td></tr>" +
+           "</table><br>" +
+           "Hitungkan nilai M",
+        options: ["A RM1 450", "B RM5 450", "C RM5 850", "D RM6 150"],
+        ans: 1
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada Kelab Badminton Smash di Kuala Terengganu.<br><br>" +
+           "<div style='text-align:center; font-weight:bold;'>Kelab Badminton Smash</div>" +
+           "<div style='text-align:center; font-weight:bold;'>Akaun Penerimaan dan Pembayaran bagi tahun berakhir 31 Disember 2025</div>" +
+           "<table class='acc-table'>" +
+           "<tr><th style='width:40%;'>Penerimaan</th><th style='width:10%;'>RM</th><th style='width:40%;'>Pembayaran</th><th style='width:10%;'>RM</th></tr>" +
+           "<tr><td>Yuran Ahli</td><td class='text-right'>2 000</td><td></td><td></td></tr>" +
+           "</table><br>" +
+           "<strong>Maklumat tambahan:</strong>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>1 Januari 2025 (RM)</th><th>31 Disember 2025 (RM)</th></tr>" +
+           "<tr><td>Yuran belum terima</td><td class='text-right'>150</td><td class='text-right'>250</td></tr>" +
+           "<tr><td>Yuran belum terperoleh</td><td class='text-right'>-</td><td class='text-right'>180</td></tr>" +
+           "</table><br>" +
+           "Berapakah jumlah yuran yang direkodkan dalam Akaun Pendapatan dan Perbelanjaan bagi tahun berakhir 31 Disember 2025?",
+        options: ["A RM1 920", "B RM2 000", "C RM2 070", "D RM2 080"],
+        ans: 0
+    },
+    {
+        q: "Antara berikut, manakah merupakan butiran Kos Overhed?",
+        options: ["A Gaji pekerja kilang", "B Loji dan alatan kilang", "C Susut nilai alatan kecil", "D Sewa bangunan pejabat"],
+        ans: 2
+    },
+    {
+        q: "Maklumat berikut diperoleh daripada buku Kilang Autotech, sebuah kilang yang mengeluarkan tangki air di Chendering, Kuala Terengganu.<br><br>" +
+           "<table class='acc-table'>" +
+           "<tr><th>Butiran</th><th>RM</th></tr>" +
+           "<tr><td>Inventori bahan langsung pada 1 Julai 2024</td><td class='text-right'>208 650</td></tr>" +
+           "<tr><td>Inventori bahan langsung pada 30 Jun 2025</td><td class='text-right'>186 430</td></tr>" +
+           "<tr><td>Belian bahan langsung</td><td class='text-right'>545 800</td></tr>" +
+           "<tr><td>Pulangan belian bahan langsung</td><td class='text-right'>19 740</td></tr>" +
+           "</table><br>" +
+           "Berapakah kos bahan langsung yang direkodkan dalam Akaun Pengeluaran?",
+        options: ["A RM503 840", "B RM526 060", "C RM548 280", "D RM587 760"],
+        ans: 2
+    },
+    {
+        q: "Tujuan utama analisis Titik Pulang Modal adalah untuk",
+        options: [
+            "A menentukan jumlah keuntungan bersih.",
+            "B mengira jumlah kos pengeluaran sebenar.",
+            "C menilai keupayaan sesebuah perniagaan membayar hutang.",
+            "D merancang tahap pengeluaran agar tidak mengalami kerugian."
+        ],
+        ans: 3
+    }
+];
+
+let currentQ = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let studentName = "";
+let studentClass = "";
+
+function startQuiz() {
+    studentName = document.getElementById('student-name').value.trim();
+    studentClass = document.getElementById('student-class').value.trim();
+
+    if (!studentName || !studentClass) {
+        alert("Sila masukkan Nama dan Kelas anda terlebih dahulu!");
+        return;
+    }
+
+    document.getElementById('start-page').classList.add('hidden');
+    document.getElementById('quiz-page').classList.remove('hidden');
+    loadQuestion();
+}
+
+function loadQuestion() {
+    document.getElementById('progress-text').innerText = `Soalan ${currentQ + 1} daripada ${questions.length}`;
+    document.getElementById('question-text').innerHTML = questions[currentQ].q;
+    
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackContainer = document.getElementById('feedback-container');
+    
+    optionsContainer.innerHTML = '';
+    feedbackContainer.innerHTML = '';
+
+    const answered = userAnswers[currentQ] !== null;
+
+    questions[currentQ].options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = opt;
+
+        if (answered) {
+            btn.disabled = true;
+            if (index === userAnswers[currentQ]) {
+                if (index === questions[currentQ].ans) {
+                    btn.classList.add('selected-correct');
+                } else {
+                    btn.classList.add('selected-wrong');
+                }
+            } else if (index === questions[currentQ].ans) {
+                btn.classList.add('show-correct');
+            }
+        } else {
+            btn.onclick = () => checkAnswer(index);
+        }
+
+        optionsContainer.appendChild(btn);
+    });
+
+    if (answered) {
+        showFeedback(userAnswers[currentQ]);
+    }
+
+    document.getElementById('prev-btn').disabled = (currentQ === 0);
+    if (currentQ === 0) {
+        document.getElementById('prev-btn').classList.add('btn-disabled');
+    } else {
+        document.getElementById('prev-btn').classList.remove('btn-disabled');
+    }
+
+    if (currentQ === questions.length - 1) {
+        document.getElementById('next-btn').innerText = "Selesai & Hantar";
+    } else {
+        document.getElementById('next-btn').innerText = "Seterusnya";
+    }
+}
+
+function checkAnswer(selectedIndex) {
+    userAnswers[currentQ] = selectedIndex;
+    loadQuestion();
+}
+
+function showFeedback(selectedIndex) {
+    const feedbackContainer = document.getElementById('feedback-container');
+    const correctIndex = questions[currentQ].ans;
+
+    if (selectedIndex === correctIndex) {
+        feedbackContainer.innerHTML = `
+            <div class="feedback correct">
+                Tahniah! Jawapan anda TEPAT. ✔️
+            </div>
+        `;
+    } else {
+        const correctText = questions[currentQ].options[correctIndex];
+        feedbackContainer.innerHTML = `
+            <div class="feedback wrong">
+                Jawapan anda KURANG TEPAT. ❌<br>
+                <span style="font-weight: normal;">Jawapan yang betul ialah: <strong>${correctText}</strong></span>
+            </div>
+        `;
+    }
+}
+
+function prevQuestion() {
+    if (currentQ > 0) {
+        currentQ--;
+        loadQuestion();
+    }
+}
+
+function nextQuestion() {
+    if (userAnswers[currentQ] === null) {
+        if (!confirm("Anda belum menjawab soalan ini. Adakah anda pasti mahu meneruskan?")) {
+            return;
+        }
+    }
+
+    if (currentQ < questions.length - 1) {
+        currentQ++;
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    document.getElementById('quiz-page').classList.add('hidden');
+    document.getElementById('result-page').classList.remove('hidden');
+
+    let totalScore = 0;
+    userAnswers.forEach((ans, idx) => {
+        if (ans === questions[idx].ans) {
+            totalScore++;
+        }
+    });
+
+    document.getElementById('res-name').innerText = studentName;
+    document.getElementById('res-class').innerText = studentClass;
+    document.getElementById('res-score').innerText = `${totalScore} / ${questions.length}`;
+    
+    const percentage = ((totalScore / questions.length) * 100).toFixed(1);
+    document.getElementById('res-percentage').innerText = `Peratusan: ${percentage}%`;
+}
+</script>
+
+</body>
+</html>
