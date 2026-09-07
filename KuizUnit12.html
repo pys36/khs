@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz Interaktif Pendidikan Moral Tingkatan 3 - Unit 12</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .draggable-item { cursor: grab; user-select: none; }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.selected { outline: 3px solid #f59e0b; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
+
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/10 p-2 rounded-xl backdrop-blur-md">
+                    <i data-lucide="book-open" class="w-6 h-6 text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold leading-tight">Pendidikan Moral Tingkatan 3</h1>
+                    <p class="text-xs text-indigo-200">Unit 12: Kebebasan Bersuara Mengikut Landasan Undang-Undang</p>
+                </div>
+            </div>
+            <div id="student-info-badge" class="hidden mt-2 sm:mt-0 bg-indigo-800/80 px-4 py-1.5 rounded-full border border-indigo-500/30 text-xs font-medium text-indigo-100 flex items-center space-x-3">
+                <span class="flex items-center space-x-1">
+                    <i data-lucide="user-check" class="w-4 h-4 text-emerald-400"></i>
+                    <span id="display-student-name">Pelajar</span>
+                </span>
+                <span class="border-l border-indigo-500/50 pl-3 flex items-center space-x-1">
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-300"></i>
+                    <span id="live-timer" class="font-mono font-bold">00:00</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+
+        <!-- Student Form Registration -->
+        <div id="start-screen" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 max-w-xl mx-auto my-8">
+            <div class="text-center mb-6">
+                <div class="inline-flex p-3 rounded-full bg-indigo-100 text-indigo-700 mb-3">
+                    <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Sertai Kuiz Interaktif</h2>
+                <p class="text-sm text-slate-500 mt-1">Sila masukkan maklumat anda sebelum memulakan kuiz</p>
+            </div>
+
+            <form onsubmit="startQuiz(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pelajar</label>
+                    <input type="text" id="input-nama" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm" placeholder="Contoh: Ahmad Bin Ali">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Kelas</label>
+                    <input type="text" id="input-kelas" required class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm" placeholder="Contoh: 3 Cemerlang">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                    <span>Mula Menjawab Kuiz</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Quiz Container (Hidden initially) -->
+        <div id="quiz-container" class="hidden space-y-6">
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+                <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center space-x-2 transition-all duration-200 bg-indigo-600 text-white shadow-md">
+                    <i data-lucide="list-checks" class="w-4 h-4"></i>
+                    <span>Tab 1: Soalan Objektif (20)</span>
+                </button>
+                <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center space-x-2 transition-all duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    <i data-lucide="git-merge" class="w-4 h-4"></i>
+                    <span>Tab 2: Padankan Pasangan (5)</span>
+                </button>
+                <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center space-x-2 transition-all duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">
+                    <i data-lucide="move" class="w-4 h-4"></i>
+                    <span>Tab 3: Drag & Drop (5)</span>
+                </button>
+            </div>
+
+            <!-- ==================== TAB 1: OBJEKTIF (1 SOALAN 1 MUKA SURAT) ==================== -->
+            <section id="tab-content-1" class="tab-content space-y-6">
+                <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3 text-indigo-900 text-sm">
+                    <i data-lucide="info" class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <span class="font-bold">Panduan:</span> Jawab soalan di bawah. <strong>Jawapan dan penjelasan penuh akan dipaparkan serta-merta sebaik sahaja anda memilih jawapan</strong> bagi soalan tersebut.
+                    </div>
+                </div>
+
+                <!-- Single Question Display Card -->
+                <div id="objektif-card" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                        <span id="objektif-progress-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center space-x-1.5">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            <span>Soalan 1 daripada 20</span>
+                        </span>
+                        <span id="objektif-answered-status" class="text-xs font-medium text-slate-400">Belum Dijawab</span>
+                    </div>
+
+                    <p id="objektif-question-text" class="font-semibold text-slate-800 text-lg leading-relaxed mb-6"></p>
+
+                    <div id="objektif-options-list" class="space-y-3 mb-6"></div>
+
+                    <!-- Instant Feedback Area -->
+                    <div id="objektif-feedback" class="hidden p-4 rounded-xl border text-sm mb-6"></div>
+
+                    <!-- Page Navigation Buttons (Kembali & Seterusnya) -->
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                        <button type="button" id="btn-prev-objektif" onclick="navigateObjektif(-1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all flex items-center space-x-2">
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            <span>Kembali</span>
+                        </button>
+                        
+                        <span class="text-xs text-slate-400 font-semibold" id="objektif-page-indicator">1 / 20</span>
+
+                        <button type="button" id="btn-next-objektif" onclick="navigateObjektif(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all flex items-center space-x-2">
+                            <span>Seterusnya</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== TAB 2: PADANKAN ==================== -->
+            <section id="tab-content-2" class="tab-content hidden space-y-6">
+                <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-start space-x-3 text-amber-900 text-sm">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <span class="font-bold">Panduan:</span> Padankan setiap soalan dengan jawapan pasangan yang betul. Selepas menyiapkan semua soalan, tekan butang <strong>"Semak Jawapan Padankan"</strong> di bawah. Skema jawapan akan muncul tepat di sebelah jawapan anda!
+                    </div>
+                </div>
+
+                <form id="form-padankan" onsubmit="submitPadankan(event)" class="space-y-6">
+                    <div id="padankan-container" class="space-y-6"></div>
+
+                    <div class="pt-4 flex justify-end">
+                        <button type="submit" id="btn-submit-padankan" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            <span>Semak Jawapan Padankan</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ==================== TAB 3: DRAG & DROP ==================== -->
+            <section id="tab-content-3" class="tab-content hidden space-y-6">
+                <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl flex items-start space-x-3 text-purple-900 text-sm">
+                    <i data-lucide="move" class="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5"></i>
+                    <div>
+                        <span class="font-bold">Panduan:</span> Tarik atau klik pilihan jawapan dari kotak sumber dan masukkan ke dalam kotak soalan yang betul. Selepas siap, tekan <strong>"Semak Jawapan Drag & Drop"</strong> di bawah untuk memaparkan skema bersebelahan jawapan anda.
+                    </div>
+                </div>
+
+                <!-- Drag Items Pool -->
+                <div id="drag-pool-box" class="bg-slate-100 border-2 border-dashed border-slate-300 p-5 rounded-2xl">
+                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center space-x-1.5">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                        <span>Kotak Pilihan Jawapan (Klik / Tarik Jawapan):</span>
+                    </p>
+                    <div id="drag-pool" class="flex flex-wrap gap-3 min-h-[50px]" ondrop="dropToPool(event)" ondragover="allowDrop(event)"></div>
+                </div>
+
+                <form id="form-drag" onsubmit="submitDrag(event)" class="space-y-6">
+                    <div id="drag-container" class="space-y-6"></div>
+
+                    <div class="pt-4 flex justify-between items-center">
+                        <button type="submit" id="btn-submit-drag" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            <span>Semak Jawapan Drag & Drop</span>
+                        </button>
+
+                        <button type="button" onclick="finishQuiz()" id="btn-finish-quiz" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-all flex items-center space-x-2">
+                            <i data-lucide="trophy" class="w-5 h-5 text-amber-300"></i>
+                            <span>Hantar Kuiz & Lihat Keputusan Akhir</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- ==================== SCORE SUMMARY CARD ==================== -->
+        <section id="results-screen" class="hidden max-w-3xl mx-auto space-y-6 my-6">
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-200 text-center">
+                <div class="inline-flex p-4 rounded-full bg-emerald-100 text-emerald-600 mb-4">
+                    <i data-lucide="award" class="w-12 h-12"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-800">Tahniah! Kuiz Selesai</h2>
+                <p class="text-sm text-slate-500 mt-1">Berikut ialah ringkasan markah dan keputusan kuiz anda</p>
+
+                <!-- Student Details Badge -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left">
+                    <div>
+                        <span class="block text-xs text-slate-400 uppercase font-semibold">Nama Pelajar</span>
+                        <span id="res-nama" class="font-bold text-slate-800 text-sm">--</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400 uppercase font-semibold">Kelas</span>
+                        <span id="res-kelas" class="font-bold text-slate-800 text-sm">--</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs text-slate-400 uppercase font-semibold">Masa Diambil</span>
+                        <span id="res-masa" class="font-bold text-indigo-600 text-sm font-mono">--</span>
+                    </div>
+                </div>
+
+                <!-- Total Score Breakdown -->
+                <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white p-6 rounded-2xl shadow-inner mb-6">
+                    <span class="text-xs uppercase font-semibold tracking-wider text-indigo-200">Jumlah Skor Keseluruhan</span>
+                    <div class="text-5xl font-black my-2">
+                        <span id="res-score">0</span> <span class="text-2xl font-normal text-indigo-300">/ 30</span>
+                    </div>
+                    <div id="res-percentage" class="text-sm font-medium text-emerald-300">0% Markah Keseluruhan</div>
+                </div>
+
+                <!-- Score breakdown by section -->
+                <div class="grid grid-cols-3 gap-3 text-xs mb-6">
+                    <div class="p-3 bg-slate-100 rounded-xl">
+                        <span class="block text-slate-500 mb-0.5">Tab 1 (Objektif)</span>
+                        <strong id="score-t1" class="text-slate-800 text-sm">0/20</strong>
+                    </div>
+                    <div class="p-3 bg-slate-100 rounded-xl">
+                        <span class="block text-slate-500 mb-0.5">Tab 2 (Padankan)</span>
+                        <strong id="score-t2" class="text-slate-800 text-sm">0/5</strong>
+                    </div>
+                    <div class="p-3 bg-slate-100 rounded-xl">
+                        <span class="block text-slate-500 mb-0.5">Tab 3 (Drag & Drop)</span>
+                        <strong id="score-t3" class="text-slate-800 text-sm">0/5</strong>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <button onclick="location.reload()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-sm transition-all flex items-center space-x-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Cuba Semula Kuiz</span>
+                    </button>
+                    <button onclick="window.print()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all flex items-center space-x-2">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Cetak Keputusan</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>Modul Latihan Interaktif Pendidikan Moral Tingkatan 3 - Unit 12</p>
+            <p class="mt-1">Kebebasan Bersuara Mengikut Landasan Undang-Undang</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data Soalan Objektif (20 Soalan asal)
+        const soalanObjektif = [
+            {
+                q: "Perkara manakah dalam Perlembagaan Persekutuan yang menjamin hak kebebasan bersuara di Malaysia?",
+                options: ["Perkara 8", "Perkara 10", "Perkara 11", "Perkara 152"],
+                answer: 1,
+                explanation: "Perkara 10(1)(a) Perlembagaan Persekutuan menjamin hak kebebasan bercakap dan bersuara kepada setiap warganegara."
+            },
+            {
+                q: "Apakah maksud kebebasan bersuara mengikut undang-undang di Malaysia?",
+                options: [
+                    "Bebas bercakap apa sahaja tanpa sebarang sekatan",
+                    "Memberikan pendapat mengikut batas undang-undang",
+                    "Mengkritik sesiapa sahaja di media sosial secara terbuka",
+                    "Menyebarkan apa-apa maklumat tanpa perlu disemak"
+                ],
+                answer: 1,
+                explanation: "Kebebasan bersuara bukanlah mutlak; ia terikat dengan batasan undang-undang untuk menjaga ketenteraman awam."
+            },
+            {
+                q: "Isu manakah yang TIDAK boleh disentuh semasa menyuarakan pendapat di tempat awam?",
+                options: [
+                    "Kecantikan taman awam",
+                    "Isu sensitif agama dan kaum",
+                    "Cadangan meningkatkan mutu sukan",
+                    "Ulasan tentang kebersihan kantin"
+                ],
+                answer: 1,
+                explanation: "Menyentuh isu sensitif agama, kaum, dan hak keistimewaan adalah dilarang bagi mengelakkan perbalahan."
+            },
+            {
+                q: "Apakah saluran rasmi yang paling betul untuk membuat aduan tentang perkhidmatan awam?",
+                options: [
+                    "Menulis hantaran beremosi di akaun peribadi Facebook",
+                    "Biro Pengaduan Awam (BPA)",
+                    "Menular video di aplikasi TikTok",
+                    "Menjerit di hadapan pejabat kerajaan"
+                ],
+                answer: 1,
+                explanation: "Biro Pengaduan Awam (BPA) atau sistem SISPAA merupakan saluran rasmi kerajaan untuk aduan perkhidmatan awam."
+            },
+            {
+                q: "Apakah undang-undang yang mengawal penyebaran maklumat palsu di internet?",
+                options: [
+                    "Akta Jalan Raya 1987",
+                    "Akta Komunikasi dan Multimedia 1998",
+                    "Akta Pekerja 1955",
+                    "Akta Rumah Judi 1953"
+                ],
+                answer: 1,
+                explanation: "Akta Komunikasi dan Multimedia 1998 (Seksyen 233) mengawal penggunaan tidak wajar kemudahan rangkaian."
+            },
+            {
+                q: "Apakah kesan buruk jika seseorang menyebarkan berita palsu di media sosial?",
+                options: [
+                    "Mendapat pujian daripada masyarakat",
+                    "Menimbulkan rasa cemas dan huru-hara dalam masyarakat",
+                    "Meningkatkan imej negara di mata dunia",
+                    "Mewujudkan masyarakat yang lebih bijak"
+                ],
+                answer: 1,
+                explanation: "Berita palsu boleh mencetuskan kepanikan, fitnah, dan kegelisahan awam."
+            },
+            {
+                q: "Mengapakah kita perlu menyemak kesahihan maklumat sebelum berkongsi di media sosial?",
+                options: [
+                    "Supaya kita menjadi orang pertama yang berkongsi",
+                    "Mengelakkan penyebaran maklumat salah dan fitnah",
+                    "Untuk mendapatkan lebih banyak 'likes'",
+                    "Kerana ia adalah arahan rakan sebaya"
+                ],
+                answer: 1,
+                explanation: "Slogan 'Tidak Pasti, Jangan Kongsi' adalah penting untuk memastikan maklumat adalah sahih dan benar."
+            },
+            {
+                q: "Apakah nilai moral yang diamalkan apabila kita berfikir dahulu sebelum bercakap?",
+                options: ["Tanggungjawab", "Rasional", "Keberanian", "Hormat"],
+                answer: 1,
+                explanation: "Nilai Rasional bermaksud boleh berfikir berdasarkan alasan dan bukti yang nyata serta mengambil tindakan yang wajar."
+            },
+            {
+                q: "Apakah tindakan yang betul jika kita tidak bersetuju dengan pendapat rakan?",
+                options: [
+                    "Mengejek dan Memulaukan rakan tersebut",
+                    "Menghormati pandangan rakan dengan tenang dan memberikan hujah berhemah",
+                    "Memotong percakapan rakan dengan suara tinggi",
+                    "Melaporkan rakan kepada polis"
+                ],
+                answer: 1,
+                explanation: "Menghormati perbezaan pendapat secara matang dan tenang merupakan ciri insan berharmoni."
+            },
+            {
+                q: "Apakah perasaan kita apabila menyuarakan pendapat melalui saluran yang betul?",
+                options: ["Gelisah dan takut", "Puas hati dan tenang", "Malu dan tertekan", "Marah dan dendam"],
+                answer: 1,
+                explanation: "Menyuarakan pendapat melalui saluran betul memberikan ketenangan fikiran kerana mengikut adab dan undang-undang."
+            },
+            {
+                q: "Apakah yang akan berlaku jika rakyat bebas bercakap TANPA sebarang kawalan undang-undang?",
+                options: [
+                    "Negara akan semakin maju dan makmur",
+                    "Berlaku pergaduhan dan ketidaktenteraman dalam negara",
+                    "Semua orang akan menjadi gembira",
+                    "Masyarakat menjadi lebih berdisiplin"
+                ],
+                answer: 1,
+                explanation: "Kebebasan tanpa kawalan boleh membawa kepada keharmonian yang musnah dan konflik kemasyarakatan."
+            },
+            {
+                q: "Pilih amalan yang BETUL semasa memberikan komen di media sosial.",
+                options: [
+                    "Menggunakan kata-kata kesat dan makian",
+                    "Menyemak kebenaran cerita sebelum meninggalkan komen yang membina",
+                    "Mengkritik rupa paras seseorang",
+                    "Menyebarkan dokumen rahsia peribadi orang lain"
+                ],
+                answer: 1,
+                explanation: "Komen yang membina dan berasaskan kebenaran mencerminkan etika siber yang tinggi."
+            },
+            {
+                q: "Mengapakah kita mesti bertanggungjawab atas setiap perkataan yang kita ucapkan?",
+                options: [
+                    "Supaya tidak menyakitkan hati orang lain dan tidak melanggar undang-undang",
+                    "Kerana orang lain akan takut kepada kita",
+                    "Untuk menunjuk-nunjuk kepandaian kita",
+                    "Kerana disuruh oleh guru sahaja"
+                ],
+                answer: 0,
+                explanation: "Setiap pertuturan memberi kesan kepada perasaan orang lain dan kedaulatan undang-undang."
+            },
+            {
+                q: "Seorang murid mahu memberi cadangan untuk mencantikkan sekolah. Saluran manakah yang PALING BETUL?",
+                options: [
+                    "Menulis cadangan dan memasukkannya ke dalam peti cadangan sekolah",
+                    "Mencoret dinding tandas sekolah",
+                    "Membuka akaun media sosial untuk mengutuk pihak sekolah",
+                    "Menganjurkan demonstrasi di padang sekolah"
+                ],
+                answer: 0,
+                explanation: "Peti cadangan atau Majlis Perwakilan Murid/Pengawas ialah saluran rasmi dan berhemah di sekolah."
+            },
+            {
+                q: "Untuk tujuan apakah kerajaan mewujudkan undang-undang seperti Akta Hasutan 1948?",
+                options: [
+                    "Menyekat semua jenis percakapan rakyat",
+                    "Untuk menjaga keamanan dan elakkan pergaduhan kaum",
+                    "Memastikan rakyat tidak berfikir secara kreatif",
+                    "Menghalang murid belajar di sekolah"
+                ],
+                answer: 1,
+                explanation: "Akta Hasutan mengekalkan keharmonian nasional dengan menghalang perbuatan atau ucapan yang memarakkan kebencian."
+            },
+            {
+                q: "Apakah ciri utama seseorang yang bersikap matang semasa bersuara?",
+                options: [
+                    "Menghormati perbezaan pandangan orang lain",
+                    "Suka menjerit apabila berhujah",
+                    "Enggan mendengar penjelasan pihak lain",
+                    "Menggunakan emosi berbanding fakta"
+                ],
+                answer: 0,
+                explanation: "Kematangan bersuara ditunjukkan menerusi kesediaan mendengar dan menghormati pandangan berbeza."
+            },
+            {
+                q: "Bagaimanakah cara terbaik menegur kesalahan rakan bersesuaian dengan adab bersuara?",
+                options: [
+                    "Mengaibkan rakan di dalam kumpulan WhatsApp kelas",
+                    "Menegur secara baik dan peribadi tanpa memalukannya",
+                    "Membuat poster sindiran tentang rakan",
+                    "Memberitahu kepada semua orang kecuali rakan tersebut"
+                ],
+                answer: 1,
+                explanation: "Teguran secara bersemuka dan peribadi menjaga maruah rakan serta menunjukkan keikhlasan."
+            },
+            {
+                q: "Apakah faedah jika penduduk membuat aduan kerosakan jalan melalui jawatankuasa taman perumahan?",
+                options: [
+                    "Aduan dapat disampaikan kepada pihak berkuasa dengan betul dan pantas",
+                    "Jalan akan rosak dengan lebih teruk",
+                    "Penduduk akan dikenakan denda",
+                    "Aduan tersebut akan dipadamkan"
+                ],
+                answer: 0,
+                explanation: "Menggunakan saluran persatuan penduduk memastikan tindakan susulan dapat diambil oleh pihak perbandaran."
+            },
+            {
+                q: "Kebebasan bersuara yang digunakan secara berhemah dapat membantu mengekalkan:",
+                options: [
+                    "Ketenangan dan kestabilan dalam negara",
+                    "Kadar jenayah yang tinggi",
+                    "Perselisihan faham antara rakan",
+                    "Sikap mementingkan diri sendiri"
+                ],
+                answer: 0,
+                explanation: "Penggunaan hak bersuara yang bertanggungjawab memelihara kestabilan dan keharmonian sosial."
+            },
+            {
+                q: "Apakah tindakan utama sebelum kita mempercayai berita yang tular di internet?",
+                options: [
+                    "Menyemak maklumat tersebut di portal rasmi seperti SEBENARNYA.MY",
+                    "Meneruskannya kepada semua kenalan terus",
+                    "Percaya 100% kerana ia disertakan gambar",
+                    "Membayar untuk menularkan lagi berita tersebut"
+                ],
+                answer: 0,
+                explanation: "Portal rasmi seperti SEBENARNYA.MY diwujudkan khas untuk mengesahkan berita tular di Malaysia."
+            }
+        ];
+
+        // Data Soalan Padankan (5 Soalan asal)
+        const soalanPadankan = [
+            {
+                id: "p1",
+                prompt: "1. Perkara 10 Perlembagaan Persekutuan",
+                correctVal: "C",
+                options: [
+                    { val: "A", text: "Portal rasmi untuk menyemak berita palsu" },
+                    { val: "B", text: "Perkara sensitif yang dilarang disentuh secara provokatif" },
+                    { val: "C", text: "Menjamin hak kebebasan bercakap dan berhimpun" },
+                    { val: "D", text: "Saluran rasmi aduan perkhidmatan awam" },
+                    { val: "E", text: "Mengawal selia kandungan tidak sah di Internet" }
+                ],
+                skema: "Padankan Betul: Menjamin hak kebebasan bercakap dan berhimpun (Perkara 10)"
+            },
+            {
+                id: "p2",
+                prompt: "2. Akta Komunikasi dan Multimedia 1998",
+                correctVal: "E",
+                options: [
+                    { val: "A", text: "Portal rasmi untuk menyemak berita palsu" },
+                    { val: "B", text: "Perkara sensitif yang dilarang disentuh secara provokatif" },
+                    { val: "C", text: "Menjamin hak kebebasan bercakap dan berhimpun" },
+                    { val: "D", text: "Saluran rasmi aduan perkhidmatan awam" },
+                    { val: "E", text: "Mengawal selia kandungan tidak sah di Internet" }
+                ],
+                skema: "Padankan Betul: Mengawal selia kandungan tidak sah di Internet"
+            },
+            {
+                id: "p3",
+                prompt: "3. SEBENARNYA.MY",
+                correctVal: "A",
+                options: [
+                    { val: "A", text: "Portal rasmi untuk menyemak berita palsu" },
+                    { val: "B", text: "Perkara sensitif yang dilarang disentuh secara provokatif" },
+                    { val: "C", text: "Menjamin hak kebebasan bercakap dan berhimpun" },
+                    { val: "D", text: "Saluran rasmi aduan perkhidmatan awam" },
+                    { val: "E", text: "Mengawal selia kandungan tidak sah di Internet" }
+                ],
+                skema: "Padankan Betul: Portal rasmi untuk menyemak berita palsu"
+            },
+            {
+                id: "p4",
+                prompt: "4. Biro Pengaduan Awam (BPA)",
+                correctVal: "D",
+                options: [
+                    { val: "A", text: "Portal rasmi untuk menyemak berita palsu" },
+                    { val: "B", text: "Perkara sensitif yang dilarang disentuh secara provokatif" },
+                    { val: "C", text: "Menjamin hak kebebasan bercakap dan berhimpun" },
+                    { val: "D", text: "Saluran rasmi aduan perkhidmatan awam" },
+                    { val: "E", text: "Mengawal selia kandungan tidak sah di Internet" }
+                ],
+                skema: "Padankan Betul: Saluran rasmi aduan perkhidmatan awam"
+            },
+            {
+                id: "p5",
+                prompt: "5. Isu 3R (Raja, Religion, Race)",
+                correctVal: "B",
+                options: [
+                    { val: "A", text: "Portal rasmi untuk menyemak berita palsu" },
+                    { val: "B", text: "Perkara sensitif yang dilarang disentuh secara provokatif" },
+                    { val: "C", text: "Menjamin hak kebebasan bercakap dan berhimpun" },
+                    { val: "D", text: "Saluran rasmi aduan perkhidmatan awam" },
+                    { val: "E", text: "Mengawal selia kandungan tidak sah di Internet" }
+                ],
+                skema: "Padankan Betul: Perkara sensitif yang dilarang disentuh secara provokatif"
+            }
+        ];
+
+        // Data Soalan Drag and Drop (5 Soalan asal)
+        const dragPoolItems = [
+            { id: "drag1", text: "Etika Berkomunikasi", targetDropId: "drop1" },
+            { id: "drag2", text: "Kesan Penyalahgunaan Kebebasan", targetDropId: "drop2" },
+            { id: "drag3", text: "Akta Hasutan 1948", targetDropId: "drop3" },
+            { id: "drag4", text: "Penggunaan Bahasa Istana", targetDropId: "drop4" },
+            { id: "drag5", text: "Sikap Terbuka", targetDropId: "drop5" }
+        ];
+
+        const soalanDrag = [
+            { dropId: "drop1", text: "1. Menggunakan bahasa yang sopan dan tidak menyebarkan fitnah semasa bercakap merujuk kepada...", correctText: "Etika Berkomunikasi" },
+            { dropId: "drop2", text: "2. Menjejaskan perpaduan kaum dan menimbulkan perselisihan faham merupakan...", correctText: "Kesan Penyalahgunaan Kebebasan" },
+            { dropId: "drop3", text: "3. Undang-undang yang mengawal kenyataan yang berunsur kecenderungan menghasut ialah...", correctText: "Akta Hasutan 1948" },
+            { dropId: "drop4", text: "4. Beradab sopan semasa menyuarakan pandangan berkaitan Institusi Diraja memerlukan...", correctText: "Penggunaan Bahasa Istana" },
+            { dropId: "drop5", text: "5. Bersedia menerima pandangan, teguran, dan kritikan membina daripada orang lain dipanggil...", correctText: "Sikap Terbuka" }
+        ];
+
+        // State Variables
+        let currentObjektifIndex = 0;
+        let selectedObjektifAnswers = {};
+        let selectedCard = null;
+
+        // Timer Variables
+        let timerInterval = null;
+        let secondsElapsed = 0;
+
+        function startQuiz(e) {
+            e.preventDefault();
+            const nama = document.getElementById('input-nama').value;
+            const kelas = document.getElementById('input-kelas').value;
+
+            document.getElementById('display-student-name').innerText = `${nama} (${kelas})`;
+            document.getElementById('student-info-badge').classList.remove('hidden');
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+
+            startTimer();
+            renderCurrentObjektifQuestion();
+            renderPadankan();
+            renderDrag();
+            lucide.createIcons();
+        }
+
+        function startTimer() {
+            secondsElapsed = 0;
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                document.getElementById('live-timer').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function renderCurrentObjektifQuestion() {
+            const q = soalanObjektif[currentObjektifIndex];
+            
+            // Update page indicators & progress badges
+            document.getElementById('objektif-progress-badge').innerHTML = `
+                <i data-lucide="help-circle" class="w-4 h-4"></i>
+                <span>Soalan ${currentObjektifIndex + 1} daripada ${soalanObjektif.length}</span>
+            `;
+            document.getElementById('objektif-page-indicator').innerText = `${currentObjektifIndex + 1} / ${soalanObjektif.length}`;
+            document.getElementById('objektif-question-text').innerText = q.q;
+
+            const isAnswered = selectedObjektifAnswers.hasOwnProperty(currentObjektifIndex);
+            const statusBadge = document.getElementById('objektif-answered-status');
+            
+            if (isAnswered) {
+                statusBadge.innerText = "Telah Dijawab";
+                statusBadge.className = "text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200";
+            } else {
+                statusBadge.innerText = "Belum Dijawab";
+                statusBadge.className = "text-xs font-medium text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full";
+            }
+
+            // Render options
+            const optionsList = document.getElementById('objektif-options-list');
+            optionsList.innerHTML = q.options.map((opt, optIdx) => {
+                let btnStyle = "border-slate-200 hover:bg-slate-50";
+                let iconHtml = "";
+
+                if (isAnswered) {
+                    const userSelected = selectedObjektifAnswers[currentObjektifIndex];
+                    if (optIdx === q.answer) {
+                        btnStyle = "bg-emerald-50 border-emerald-500 text-emerald-900 font-semibold";
+                        iconHtml = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>`;
+                    } else if (optIdx === userSelected) {
+                        btnStyle = "bg-rose-50 border-rose-500 text-rose-900 font-semibold";
+                        iconHtml = `<i data-lucide="x-circle" class="w-5 h-5 text-rose-600"></i>`;
+                    } else {
+                        btnStyle = "opacity-40 border-slate-200";
+                    }
+                }
+
+                return `
+                    <button type="button" 
+                            ${isAnswered ? 'disabled' : ''} 
+                            onclick="answerObjektif(${optIdx})" 
+                            class="w-full text-left p-4 rounded-xl border ${btnStyle} transition-all flex items-center justify-between group">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                ${String.fromCharCode(65 + optIdx)}
+                            </span>
+                            <span class="text-sm font-medium leading-normal">${opt}</span>
+                        </div>
+                        <div>${iconHtml}</div>
+                    </button>
+                `;
+            }).join('');
+
+            // Render instant feedback
+            const feedbackDiv = document.getElementById('objektif-feedback');
+            if (isAnswered) {
+                const userSelected = selectedObjektifAnswers[currentObjektifIndex];
+                const isCorrect = userSelected === q.answer;
+                
+                feedbackDiv.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-900', 'bg-rose-50', 'border-rose-200', 'text-rose-900');
+
+                if (isCorrect) {
+                    feedbackDiv.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center space-x-2 font-bold text-emerald-700 mb-1">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            <span>Tepat Sekali!</span>
+                        </div>
+                        <p class="text-xs text-emerald-800 leading-relaxed">${q.explanation}</p>
+                    `;
+                } else {
+                    feedbackDiv.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+                    feedbackDiv.innerHTML = `
+                        <div class="flex items-center space-x-2 font-bold text-rose-700 mb-1">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                            <span>Jawapan Kurang Tepat</span>
+                        </div>
+                        <p class="text-xs text-rose-800 leading-relaxed">Jawapan betul ialah <strong>${String.fromCharCode(65 + q.answer)}: ${q.options[q.answer]}</strong>.<br>${q.explanation}</p>
+                    `;
+                }
+            } else {
+                feedbackDiv.classList.add('hidden');
+            }
+
+            // Update navigation button states
+            const prevBtn = document.getElementById('btn-prev-objektif');
+            const nextBtn = document.getElementById('btn-next-objektif');
+
+            if (currentObjektifIndex === 0) {
+                prevBtn.disabled = true;
+                prevBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                prevBtn.disabled = false;
+                prevBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+
+            if (currentObjektifIndex === soalanObjektif.length - 1) {
+                nextBtn.innerHTML = `<span>Ke Tab 2 (Padankan)</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+            } else {
+                nextBtn.innerHTML = `<span>Seterusnya</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+            }
+
+            lucide.createIcons();
+        }
+
+        function answerObjektif(selectedOptIdx) {
+            selectedObjektifAnswers[currentObjektifIndex] = selectedOptIdx;
+            renderCurrentObjektifQuestion();
+        }
+
+        function navigateObjektif(direction) {
+            const newIndex = currentObjektifIndex + direction;
+            if (newIndex >= 0 && newIndex < soalanObjektif.length) {
+                currentObjektifIndex = newIndex;
+                renderCurrentObjektifQuestion();
+            } else if (newIndex >= soalanObjektif.length) {
+                switchTab(2);
+            }
+        }
+
+        function renderPadankan() {
+            const container = document.getElementById('padankan-container');
+            container.innerHTML = soalanPadankan.map((item, idx) => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="font-bold text-slate-800 text-base mb-3">${item.prompt}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4 transition-all" id="grid-padankan-${idx}">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1">Pilih Pasangan Jawapan Anda:</label>
+                            <select id="select-padankan-${idx}" required class="w-full p-3.5 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white">
+                                <option value="">-- Pilih Jawapan --</option>
+                                ${item.options.map(opt => `<option value="${opt.val}">${opt.val}: ${opt.text}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <!-- Side-by-side Schema Column (Initially Hidden) -->
+                        <div id="skema-padankan-${idx}" class="hidden bg-emerald-50/80 border border-emerald-200 p-4 rounded-xl text-xs text-emerald-900">
+                            <div class="flex items-center space-x-1.5 font-bold text-emerald-800 mb-2">
+                                <i data-lucide="file-check" class="w-4 h-4 text-emerald-600"></i>
+                                <span>Skema Jawapan Cadangan:</span>
+                            </div>
+                            <p class="font-semibold text-emerald-950">${item.skema}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function submitPadankan(e) {
+            e.preventDefault();
+
+            soalanPadankan.forEach((item, idx) => {
+                const selectEl = document.getElementById(`select-padankan-${idx}`);
+                const skemaBox = document.getElementById(`skema-padankan-${idx}`);
+                const gridDiv = document.getElementById(`grid-padankan-${idx}`);
+
+                selectEl.disabled = true;
+                selectEl.classList.add('bg-slate-100', 'text-slate-700');
+
+                gridDiv.classList.remove('grid-cols-1');
+                gridDiv.classList.add('md:grid-cols-2');
+
+                skemaBox.classList.remove('hidden');
+            });
+
+            const btn = document.getElementById('btn-submit-padankan');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i><span>Jawapan Telah Disemak</span>`;
+
+            lucide.createIcons();
+            document.getElementById('form-padankan').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderDrag() {
+            const pool = document.getElementById('drag-pool');
+            const container = document.getElementById('drag-container');
+            pool.innerHTML = '';
+            container.innerHTML = '';
+
+            let shuffled = [...dragPoolItems].sort(() => Math.random() - 0.5);
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'draggable-item bg-indigo-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm hover:bg-indigo-700 transition-all';
+                card.id = item.id;
+                card.draggable = true;
+                card.innerText = item.text;
+                card.ondragstart = (e) => e.dataTransfer.setData('text', e.target.id);
+                card.onclick = (e) => selectCardOnClick(card, e);
+                pool.appendChild(card);
+            });
+
+            container.innerHTML = soalanDrag.map((q, idx) => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="font-bold text-slate-800 text-base mb-3">${q.text}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4 transition-all" id="grid-drag-${idx}">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1">Ruang Jawapan Anda:</label>
+                            <div class="drop-target border-2 border-dashed border-slate-300 bg-slate-50 rounded-xl min-h-[50px] flex items-center justify-center p-2 text-xs text-slate-400 font-medium" 
+                                 id="${q.dropId}" 
+                                 ondragover="allowDrop(event)" 
+                                 ondrop="dropToTarget(event)" 
+                                 onclick="handleTargetClick(this)">
+                                Tarik atau Klik jawapan ke sini
+                            </div>
+                        </div>
+
+                        <!-- Side-by-side Schema Column (Initially Hidden) -->
+                        <div id="skema-drag-${idx}" class="hidden bg-purple-50/80 border border-purple-200 p-4 rounded-xl text-xs text-purple-900">
+                            <div class="flex items-center space-x-1.5 font-bold text-purple-800 mb-2">
+                                <i data-lucide="award" class="w-4 h-4 text-purple-600"></i>
+                                <span>Skema Jawapan Cadangan:</span>
+                            </div>
+                            <p class="font-semibold text-purple-950">Jawapan Betul: ${q.correctText}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); }
+        
+        function dropToTarget(ev) {
+            ev.preventDefault();
+            let target = ev.target.classList.contains('drop-target') ? ev.target : ev.target.closest('.drop-target');
+            const cardId = ev.dataTransfer.getData("text");
+            const card = document.getElementById(cardId);
+            if (target && card && !target.dataset.disabled) {
+                if (target.children.length > 0) document.getElementById("drag-pool").appendChild(target.children[0]);
+                target.innerHTML = "";
+                target.appendChild(card);
+            }
+        }
+
+        function dropToPool(ev) {
+            ev.preventDefault();
+            const cardId = ev.dataTransfer.getData("text");
+            const card = document.getElementById(cardId);
+            if (card && !card.dataset.disabled) document.getElementById("drag-pool").appendChild(card);
+        }
+
+        function selectCardOnClick(card, event) {
+            if (card.dataset.disabled) return;
+            event.stopPropagation();
+            if (selectedCard === card) {
+                card.classList.remove("selected");
+                selectedCard = null;
+            } else {
+                document.querySelectorAll(".draggable-item").forEach(c => c.classList.remove("selected"));
+                selectedCard = card;
+                card.classList.add("selected");
+            }
+        }
+
+        function handleTargetClick(target) {
+            if (target.dataset.disabled) return;
+            if (selectedCard) {
+                if (target.children.length > 0) document.getElementById("drag-pool").appendChild(target.children[0]);
+                target.innerHTML = "";
+                target.appendChild(selectedCard);
+                selectedCard.classList.remove("selected");
+                selectedCard = null;
+            } else if (target.children.length > 0) {
+                document.getElementById("drag-pool").appendChild(target.children[0]);
+                target.innerText = "Tarik atau Klik jawapan ke sini";
+            }
+        }
+
+        function submitDrag(e) {
+            e.preventDefault();
+
+            soalanDrag.forEach((q, idx) => {
+                const target = document.getElementById(q.dropId);
+                const skemaBox = document.getElementById(`skema-drag-${idx}`);
+                const gridDiv = document.getElementById(`grid-drag-${idx}`);
+
+                if (target) target.dataset.disabled = "true";
+
+                gridDiv.classList.remove('grid-cols-1');
+                gridDiv.classList.add('md:grid-cols-2');
+
+                skemaBox.classList.remove('hidden');
+            });
+
+            document.querySelectorAll(".draggable-item").forEach(el => {
+                el.draggable = false;
+                el.dataset.disabled = "true";
+            });
+
+            const btn = document.getElementById('btn-submit-drag');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i><span>Jawapan Telah Disemak</span>`;
+
+            lucide.createIcons();
+            document.getElementById('form-drag').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function switchTab(tabIndex) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+            });
+
+            document.getElementById(`tab-content-${tabIndex}`).classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+            activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+
+            // Calculate Tab 1 Score
+            let scoreTab1 = 0;
+            soalanObjektif.forEach((q, idx) => {
+                if (selectedObjektifAnswers[idx] === q.answer) scoreTab1++;
+            });
+
+            // Calculate Tab 2 Score
+            let scoreTab2 = 0;
+            soalanPadankan.forEach((q, idx) => {
+                const selectEl = document.getElementById(`select-padankan-${idx}`);
+                if (selectEl && selectEl.value === q.correctVal) scoreTab2++;
+            });
+
+            // Calculate Tab 3 Score
+            let scoreTab3 = 0;
+            dragPoolItems.forEach(item => {
+                const el = document.getElementById(item.id);
+                if (el && el.parentElement && el.parentElement.id === item.targetDropId) {
+                    scoreTab3++;
+                }
+            });
+
+            const totalScore = scoreTab1 + scoreTab2 + scoreTab3;
+            const percentage = Math.round((totalScore / 30) * 100);
+
+            const nama = document.getElementById('input-nama').value;
+            const kelas = document.getElementById('input-kelas').value;
+
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+
+            // Populate Results UI
+            document.getElementById('res-nama').innerText = nama;
+            document.getElementById('res-kelas').innerText = kelas;
+            document.getElementById('res-masa').innerText = `${mins}:${secs}`;
+            document.getElementById('res-score').innerText = totalScore;
+            document.getElementById('res-percentage').innerText = `${percentage}% Markah Keseluruhan`;
+
+            document.getElementById('score-t1').innerText = `${scoreTab1}/20`;
+            document.getElementById('score-t2').innerText = `${scoreTab2}/5`;
+            document.getElementById('score-t3').innerText = `${scoreTab3}/5`;
+
+            // Display Results Screen
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            lucide.createIcons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
