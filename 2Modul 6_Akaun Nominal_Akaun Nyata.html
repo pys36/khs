@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prinsip Perakaunan Tingkatan 4 - Modul 5: Lejar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Muka Hadapan / Header */
+        .cover-header {
+            text-align: center;
+            border-bottom: 3px double #3498db;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+        .cover-header h1 {
+            color: #1a5276;
+            font-size: 2em;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .cover-header h2 {
+            color: #2980b9;
+            font-size: 1.4em;
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+        .teacher-name {
+            font-style: italic;
+            color: #5d6d7e;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+
+        /* Maklumat Pelajar */
+        .student-info {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            background-color: #ebf5fb;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #aed6f1;
+            margin-bottom: 30px;
+        }
+        .info-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .info-input {
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 1em;
+            outline: none;
+        }
+        .info-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        /* Arahan & Petunjuk */
+        .instructions {
+            background-color: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 1.05em;
+        }
+
+        /* Ruang Tarik (Drag Options) */
+        .drag-container {
+            background-color: #f8f9fa;
+            border: 2px dashed #bdc3c7;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            min-height: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .draggable {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 0.95em;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        .draggable:hover {
+            background-color: #2980b9;
+        }
+        .draggable:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+        .draggable.dragging {
+            opacity: 0.4;
+        }
+
+        /* Petak Lepas (Dropzone) */
+        .dropzone {
+            display: inline-block;
+            min-width: 160px;
+            height: 36px;
+            border-bottom: 2px solid #2c3e50;
+            background-color: #eef2f5;
+            vertical-align: middle;
+            margin: 3px 5px;
+            border-radius: 4px 4px 0 0;
+            text-align: center;
+            line-height: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: background-color 0.3s;
+        }
+        .dropzone.hovered {
+            background-color: #d6eaf8;
+            border-bottom-style: dashed;
+        }
+        .dropzone.filled {
+            background-color: #e8f8f5;
+            border-bottom-color: #27ae60;
+        }
+
+        /* Bahagian Latihan */
+        .part-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        .part-title {
+            color: #1a5276;
+            margin-top: 0;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .question-item {
+            margin-bottom: 18px;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* Maklum Balas & Butang */
+        .hidden {
+            display: none;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+            line-height: 1.6;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        button.btn-check {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button.btn-check:hover {
+            background-color: #219150;
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Muka Hadapan -->
+    <div class="cover-header">
+        <h1>Prinsip Perakaunan Tingkatan 4</h1>
+        <h2>Modul 5: Lejar</h2>
+        <div class="teacher-name">Disediakan oleh: <strong>Cikgu Huan Chan Ping</strong></div>
+
+        <!-- Ruang Nama & Kelas -->
+        <div class="student-info">
+            <div class="info-group">
+                <label for="student-name">Nama Pelajar:</label>
+                <input type="text" id="student-name" class="info-input" placeholder="Masukkan nama anda">
+            </div>
+            <div class="info-group">
+                <label for="student-class">Kelas:</label>
+                <input type="text" id="student-class" class="info-input" placeholder="Contoh: 4 Cemerlang">
+            </div>
+        </div>
+    </div>
+
+    <!-- BAHAGIAN 1: MAKSUD AKAUN -->
+    <div id="part1" class="part-section">
+        <h2 class="part-title">Bahagian 1: Maksud Akaun Nyata dan Akaun Nominal</h2>
+        <div class="instructions">
+            <strong>Arahan:</strong> Seret (drag) maksud yang betul dari Kotak Jawapan dan lepaskan (drop) ke dalam tempat kosong.
+        </div>
+
+        <!-- Kotak Pilihan Bahagian 1 -->
+        <div class="drag-container" id="options-part1">
+            <div class="draggable" draggable="true" id="opt-p1-1" data-value="aset">semua aset perniagaan</div>
+            <div class="draggable" draggable="true" id="opt-p1-2" data-value="hasil-belanja">semua hasil dan belanja</div>
+        </div>
+
+        <div class="question-item">
+            1. <strong>Akaun Nyata</strong> ialah akaun yang merekodkan <span class="dropzone" data-accept="aset" id="dz-p1-1"></span>.
+        </div>
+        <div class="question-item">
+            2. <strong>Akaun Nominal</strong> ialah akaun yang merekodkan <span class="dropzone" data-accept="hasil-belanja" id="dz-p1-2"></span>.
+        </div>
+
+        <button class="btn-check" onclick="checkPart1()">Semak Jawapan Bahagian 1</button>
+        <div id="feedback-p1" class="feedback"></div>
+    </div>
+
+    <!-- BAHAGIAN 2: CONTOH AKAUN (BERDASARKAN TEKS SUMBER SAHAJA) -->
+    <div id="part2" class="part-section hidden">
+        <h2 class="part-title">Bahagian 2: Pengelasan Contoh Akaun (Akaun Nyata vs Akaun Nominal)</h2>
+        <div class="instructions">
+            <strong>Arahan:</strong> Seret (drag) setiap contoh akaun dari Kotak Jawapan di bawah dan lepaskan (drop) ke dalam kategori yang tepat mengikut bahan sumber.
+        </div>
+
+        <!-- Kotak Pilihan Bahagian 2 -->
+        <div class="drag-container" id="options-part2">
+            <div class="draggable" draggable="true" id="opt-p2-1" data-value="nyata">Akaun Lengkapan</div>
+            <div class="draggable" draggable="true" id="opt-p2-2" data-value="nyata">Akaun Perabot</div>
+            <div class="draggable" draggable="true" id="opt-p2-3" data-value="nyata">Akaun Kenderaan</div>
+            <div class="draggable" draggable="true" id="opt-p2-4" data-value="nyata">Akaun Bank</div>
+
+            <div class="draggable" draggable="true" id="opt-p2-5" data-value="nominal">Akaun Belian</div>
+            <div class="draggable" draggable="true" id="opt-p2-6" data-value="nominal">Akaun Jualan</div>
+            <div class="draggable" draggable="true" id="opt-p2-7" data-value="nominal">Akaun Belanja Am</div>
+            <div class="draggable" draggable="true" id="opt-p2-8" data-value="nominal">Akaun Kadar Bayaran</div>
+            <div class="draggable" draggable="true" id="opt-p2-9" data-value="nominal">Akaun Dividen</div>
+            <div class="draggable" draggable="true" id="opt-p2-10" data-value="nominal">Akaun Sewa Diterima</div>
+        </div>
+
+        <div class="question-item">
+            <ol>
+                <li>
+                    <strong>Contoh-contoh Akaun Nyata (Aset):</strong><br>
+                    • <span class="dropzone" data-target="nyata" id="dz-p2-1"></span><br>
+                    • <span class="dropzone" data-target="nyata" id="dz-p2-2"></span><br>
+                    • <span class="dropzone" data-target="nyata" id="dz-p2-3"></span><br>
+                    • <span class="dropzone" data-target="nyata" id="dz-p2-4"></span>
+                </li>
+                <br>
+                <li>
+                    <strong>Contoh-contoh Akaun Nominal (Hasil & Belanja):</strong><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-5"></span><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-6"></span><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-7"></span><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-8"></span><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-9"></span><br>
+                    • <span class="dropzone" data-target="nominal" id="dz-p2-10"></span>
+                </li>
+            </ol>
+        </div>
+
+        <button class="btn-check" onclick="checkPart2()">Semak Jawapan Bahagian 2</button>
+        <div id="feedback-p2" class="feedback"></div>
+    </div>
+</div>
+
+<script>
+    let draggedElement = null;
+
+    function initDraggables() {
+        const draggables = document.querySelectorAll('.draggable');
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                draggedElement = draggable;
+                draggable.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', draggable.id);
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+                draggedElement = null;
+            });
+        });
+    }
+
+    function initDropzones() {
+        const dropzones = document.querySelectorAll('.dropzone');
+        dropzones.forEach(dropzone => {
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('hovered');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('hovered');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('hovered');
+                
+                if (draggedElement) {
+                    if (dropzone.children.length > 0) {
+                        const existingChild = dropzone.children[0];
+                        const parentContainer = dropzone.closest('.part-section').querySelector('.drag-container');
+                        parentContainer.appendChild(existingChild);
+                    }
+                    
+                    dropzone.appendChild(draggedElement);
+                    dropzone.classList.add('filled');
+                }
+            });
+        });
+    }
+
+    function checkPart1() {
+        const studentName = document.getElementById('student-name').value.trim();
+        const feedback = document.getElementById('feedback-p1');
+
+        if (!studentName) {
+            alert('Sila masukkan Nama Pelajar di bahagian muka hadapan dahulu!');
+            document.getElementById('student-name').focus();
+            return;
+        }
+
+        const dz1 = document.getElementById('dz-p1-1');
+        const dz2 = document.getElementById('dz-p1-2');
+
+        const child1 = dz1.firstElementChild;
+        const child2 = dz2.firstElementChild;
+
+        if (!child1 || !child2) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Sila lengkapkan tempat kosong dalam Bahagian 1 terlebih dahulu!';
+            return;
+        }
+
+        if (child1.getAttribute('data-value') === dz1.getAttribute('data-accept') &&
+            child2.getAttribute('data-value') === dz2.getAttribute('data-accept')) {
+            
+            feedback.style.display = 'block';
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `Tahniah <strong>${studentName}</strong>! Jawapan Maksud untuk Bahagian 1 adalah TEPAT.<br><br>
+            • <strong>Akaun Nyata:</strong> Akaun yang merekodkan semua aset perniagaan.<br>
+            • <strong>Akaun Nominal:</strong> Akaun yang merekodkan semua hasil dan belanja.<br><br>
+            <i>Sila teruskan ke Bahagian 2 di bawah!</i>`;
+            
+            document.getElementById('part2').classList.remove('hidden');
+            document.getElementById('part2').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Jawapan kurang tepat. Sila tukar kedudukan jawapan!';
+        }
+    }
+
+    function checkPart2() {
+        const studentName = document.getElementById('student-name').value;
+        const feedback = document.getElementById('feedback-p2');
+        const dropzones = document.querySelectorAll('#part2 .dropzone');
+
+        let allFilled = true;
+        let incorrectCount = 0;
+
+        dropzones.forEach(dz => {
+            const child = dz.firstElementChild;
+            if (!child) {
+                allFilled = false;
+            } else {
+                const itemType = child.getAttribute('data-value');
+                const targetType = dz.getAttribute('data-target');
+
+                if (itemType !== targetType) {
+                    incorrectCount++;
+                }
+            }
+        });
+
+        if (!allFilled) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Sila isi kesemua 10 petak jawapan dalam Bahagian 2 terlebih dahulu!';
+            return;
+        }
+
+        if (incorrectCount === 0) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `SYABAS DAN TAHNIAH <strong>${studentName}</strong>! 🎉<br>
+            Anda telah berjaya mengelaskan kesemua 10 contoh akaun tepat mengikut bahan sumber!<br><br>
+            <strong>Akaun Nyata:</strong> Akaun Lengkapan, Akaun Perabot, Akaun Kenderaan, Akaun Bank.<br>
+            <strong>Akaun Nominal:</strong> Akaun Belian, Akaun Jualan, Akaun Belanja Am, Akaun Kadar Bayaran, Akaun Dividen, Akaun Sewa Diterima.`;
+        } else {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = `Terdapat ${incorrectCount} jawapan yang diletakkan pada kategori yang salah. Sila semak semula perbezaan antara Akaun Nyata (Aset) dan Akaun Nominal (Hasil & Belanja)!`;
+        }
+    }
+
+    initDraggables();
+    initDropzones();
+</script>
+
+</body>
+</html>
