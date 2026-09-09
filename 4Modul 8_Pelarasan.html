@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelarasan Akaun Nominal - Interaktif & Nota Tab</title>
+    <style>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Styling Tab Header */
+        .tab-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            border-bottom: 3px solid #6b4c82;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background-color: #e0d5e8;
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #4a3459;
+            cursor: pointer;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover {
+            background-color: #c9b4d9;
+        }
+
+        .tab-btn.active {
+            background-color: #6b4c82;
+            color: white;
+        }
+
+        /* Tab Content Styling */
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stylings Drag & Drop (Tab 1) */
+        p.arahtujuk {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .drag-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+            min-height: 50px;
+        }
+
+        .draggable {
+            background-color: #6b4c82;
+            color: white;
+            padding: 10px 18px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: grab;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .drop-zone-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .drop-card {
+            background-color: #ffffff;
+            border-left: 5px solid #6b4c82;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .definition-text {
+            flex: 1;
+            padding-right: 15px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .definition-text small {
+            color: #777;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .drop-zone {
+            width: 210px;
+            height: 45px;
+            border: 2px dashed #bbb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafafa;
+        }
+
+        .drop-zone.hovered {
+            background-color: #e8dff0;
+            border-color: #6b4c82;
+        }
+
+        .correct-answer-text {
+            display: none;
+            font-size: 13px;
+            font-weight: bold;
+            color: #2e7d32;
+            background-color: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #a5d6a7;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button.btn-submit {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.btn-submit:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* Styling Nota Interaktif (Tab 2, 3, 4, 5) */
+        .info-card h3 {
+            color: #6b4c82;
+            border-bottom: 2px solid #e0d5e8;
+            padding-bottom: 5px;
+        }
+
+        .maksud-box {
+            background-color: #f8f4fa;
+            border-left: 4px solid #6b4c82;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .maksud-box p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .quiz-section {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-title {
+            font-weight: bold;
+            color: #4a3459;
+            margin-bottom: 10px;
+        }
+
+        .quiz-option-btn {
+            background-color: #fff;
+            border: 1px solid #6b4c82;
+            color: #6b4c82;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .quiz-option-btn:hover {
+            background-color: #6b4c82;
+            color: #fff;
+        }
+
+        .feedback-text {
+            font-weight: bold;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .accordion-btn {
+            background-color: #6b4c82;
+            color: white;
+            cursor: pointer;
+            padding: 10px 15px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .accordion-btn:hover {
+            background-color: #523865;
+        }
+
+        .accordion-content {
+            padding: 0 15px;
+            background-color: #f9f9f9;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-left: 3px solid #6b4c82;
+            margin-top: 5px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .accordion-content p {
+            padding: 10px 0;
+            line-height: 1.5;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Akaun Nominal: Pelarasan & Latihan Interaktif</h2>
+
+    <!-- Menu Tab -->
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="openTab(event, 'tab-latihan')">🎮 Latihan (Drag & Drop)</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-bbb')">1. Belanja Belum Bayar</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-bp')">2. Belanja Prabayar</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-hbtp')">3. Hasil Belum Terperoleh</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-hbt')">4. Hasil Belum Terima</button>
+    </div>
+
+    <!-- TAB 1: LATIHAN DRAG AND DROP -->
+    <div id="tab-latihan" class="tab-content active">
+        <p class="arahtujuk">请把上方的选项拖拽 (Drag) 到正确的意思解释框中。</p>
+
+        <div class="drag-container" id="source-container">
+            <div class="draggable" draggable="true" id="item1" data-value="belanja-belum-bayar">Belanja Belum Bayar</div>
+            <div class="draggable" draggable="true" id="item2" data-value="belanja-prabayar">Belanja Prabayar</div>
+            <div class="draggable" draggable="true" id="item3" data-value="hasil-belum-terperoleh">Hasil Belum Terperoleh</div>
+            <div class="draggable" draggable="true" id="item4" data-value="hasil-belum-terima">Hasil Belum Terima</div>
+        </div>
+
+        <div class="drop-zone-container">
+            <div class="drop-card">
+                <div class="definition-text">
+                    <strong>1. 应付费用：</strong>本期应该还的费用，但到期末<strong>还没还钱</strong>。
+                    <small>(Belanja yang sepatutnya dibayar dalam tempoh semasa tetapi belum dijelaskan.)</small>
+                </div>
+                <div class="right-section">
+                    <div class="drop-zone" data-target="belanja-belum-bayar"></div>
+                    <div class="correct-answer-text">✅ Jawapan Betul: Belanja Belum Bayar</div>
+                </div>
+            </div>
+
+            <div class="drop-card">
+                <div class="definition-text">
+                    <strong>2. 预付费用：</strong>下一期的费用，但在本期<strong>已经提前还钱了</strong>。
+                    <small>(Belanja bagi tempoh akan datang yang telah dijelaskan dalam tempoh semasa.)</small>
+                </div>
+                <div class="right-section">
+                    <div class="drop-zone" data-target="belanja-prabayar"></div>
+                    <div class="correct-answer-text">✅ Jawapan Betul: Belanja Prabayar</div>
+                </div>
+            </div>
+
+            <div class="drop-card">
+                <div class="definition-text">
+                    <strong>3. 预收收入：</strong>下一期的收入，但在本期<strong>已经提前收钱了</strong>。
+                    <small>(Hasil bagi tempoh akan datang tetapi telah diterima dalam tempoh semasa.)</small>
+                </div>
+                <div class="right-section">
+                    <div class="drop-zone" data-target="hasil-belum-terperoleh"></div>
+                    <div class="correct-answer-text">✅ Jawapan Betul: Hasil Belum Terperoleh</div>
+                </div>
+            </div>
+
+            <div class="drop-card">
+                <div class="definition-text">
+                    <strong>4. 应收收入：</strong>本期应该收到的收入，组织到期末<strong>还没收到钱</strong>。
+                    <small>(Hasil yang sepatutnya diterima bagi tempoh semasa tetapi masih belum diterima.)</small>
+                </div>
+                <div class="right-section">
+                    <div class="drop-zone" data-target="hasil-belum-terima"></div>
+                    <div class="correct-answer-text">✅ Jawapan Betul: Hasil Belum Terima</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn-submit" onclick="checkAnswers()">检查答案 (Semak Jawapan)</button>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <!-- TAB 2: BELANJA BELUM BAYAR -->
+    <div id="tab-bbb" class="tab-content">
+        <div class="info-card">
+            <h3>Belanja Belum Bayar (应付费用)</h3>
+            
+            <div class="maksud-box">
+                <p><strong>BM:</strong> Belanja yang sepatutnya dibayar dalam tempoh perakaunan semasa tetapi belum dijelaskan sehingga akhir tempoh perakaunan.</p>
+                <p><strong>华语:</strong> 本期应该还的费用，但到期末<strong>还没还钱</strong>。</p>
+            </div>
+
+            <!-- Interaktif 1: Kuiz Kesan Akaun -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 1: Apakah kesan item ini terhadap Belanja Tahun Semasa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('bbb1', 'correct', '✅ BETUL! Tambahkan ke Belanja tahun semasa kerana ia tergolong dalam belanja tahun ini.')">A. MENAMBAHKAN Belanja</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('bbb1', 'wrong', '❌ SALAH! Belanja ini patut diiktiraf tahun ini, jadi ia mesti ditambah.')">B. MENGURANGKAN Belanja</button>
+                <div id="bbb1-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 2: Kuiz PKK -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 2: Dalam PKK, item ini direkodkan sebagai apa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('bbb2', 'wrong', '❌ SALAH! Hutang belanja yang belum dibayar ialah hutang perniagaan (Liabiliti).')">A. Aset Semasa</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('bbb2', 'correct', '✅ BETUL! Kerana ini merupakan hutang/tanggungan perniagaan yang belum dijelaskan.')">B. Liabiliti Semasa</button>
+                <div id="bbb2-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 3: Accordion Contoh -->
+            <button class="accordion-btn" onclick="toggleAccordion(this)">🔍 Klik untuk lihat Contoh Situasi & Penerangan</button>
+            <div class="accordion-content">
+                <p><strong>Contoh:</strong> Sewa kedai bulan Disember RM1,000 belum dibayar sehingga 31 Disember (tarikh tutup akaun).<br>
+                <i>Contoh Akaun:</i> Sewa Belum Bayar, Gaji Belum Bayar, Kadar Bayaran Belum Bayar.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: BELANJA PRABAYAR -->
+    <div id="tab-bp" class="tab-content">
+        <div class="info-card">
+            <h3>Belanja Prabayar (预付费用)</h3>
+            
+            <div class="maksud-box">
+                <p><strong>BM:</strong> Belanja bagi tempoh perakaunan akan datang yang telah dijelaskan dalam tempoh perakaunan semasa.</p>
+                <p><strong>华语:</strong> 下一期的费用，但在本期<strong>已经提前还钱了</strong>。</p>
+            </div>
+
+            <!-- Interaktif 1 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 1: Apakah kesan item ini terhadap Belanja Tahun Semasa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('bp1', 'wrong', '❌ SALAH! Ini bayaran untuk tahun depan, jadi belanja tahun ini terlebih kira.')">A. MENAMBAHKAN Belanja</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('bp1', 'correct', '✅ BETUL! Tolakkan daripada Belanja tahun semasa kerana ini belanja tahun hadapan.')">B. MENGURANGKAN Belanja</button>
+                <div id="bp1-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 2 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 2: Dalam PKK, item ini direkodkan sebagai apa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('bp2', 'correct', '✅ BETUL! Pembayaran awal memberikan hak/faedah kepada perniagaan pada masa depan (Aset).')">A. Aset Semasa</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('bp2', 'wrong', '❌ SALAH! Ini bukan tanggungan hutang, kita sudah bayar awal.')">B. Liabiliti Semasa</button>
+                <div id="bp2-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 3 -->
+            <button class="accordion-btn" onclick="toggleAccordion(this)">🔍 Klik untuk lihat Contoh Situasi & Penerangan</button>
+            <div class="accordion-content">
+                <p><strong>Contoh:</strong> Membayar insuran perniagaan RM1,200 pada 1 Oktober untuk tempoh setahun penuh (hingga September tahun depan).<br>
+                <i>Contoh Akaun:</i> Insurans Prabayar, Iklan Prabayar, Sewa Prabayar.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: HASIL BELUM TERPEROLEH -->
+    <div id="tab-hbtp" class="tab-content">
+        <div class="info-card">
+            <h3>Hasil Belum Terperoleh (预收收入)</h3>
+            
+            <div class="maksud-box">
+                <p><strong>BM:</strong> Hasil yang sepatutnya diterima bagi tempoh perakaunan akan datang tetapi telah diterima dalam tempoh perakaunan semasa.</p>
+                <p><strong>华语:</strong> 下一期的收入，但在本期<strong>已经提前收钱了</strong>。</p>
+            </div>
+
+            <!-- Interaktif 1 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 1: Apakah kesan item ini terhadap Hasil Tahun Semasa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbtp1', 'wrong', '❌ SALAH! Wang ini untuk perkhidmatan tahun depan, bukan milik tahun ini lagi.')">A. MENAMBAHKAN Hasil</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbtp1', 'correct', '✅ BETUL! Tolakkan daripada Hasil tahun semasa kerana wang tersebut milik tempoh akan datang.')">B. MENGURANGKAN Hasil</button>
+                <div id="hbtp1-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 2 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 2: Dalam PKK, item ini direkodkan sebagai apa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbtp2', 'wrong', '❌ SALAH! Mengambil wang sebelum membuat kerja dianggap tanggungan/tanggungjawab.')">A. Aset Semasa</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbtp2', 'correct', '✅ BETUL! Perniagaan terhutang perkhidmatan/barang kepada pelanggan yang telah bayar awal.')">B. Liabiliti Semasa</button>
+                <div id="hbtp2-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 3 -->
+            <button class="accordion-btn" onclick="toggleAccordion(this)">🔍 Klik untuk lihat Contoh Situasi & Penerangan</button>
+            <div class="accordion-content">
+                <p><strong>Contoh:</strong> Menerima komisen RM500 secara tunai daripada pelanggan untuk perkhidmatan yang hanya akan diberikan pada bulan depan.<br>
+                <i>Contoh Akaun:</i> Sewa Belum Terperoleh, Komisen Belum Terperoleh.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: HASIL BELUM TERIMA -->
+    <div id="tab-hbt" class="tab-content">
+        <div class="info-card">
+            <h3>Hasil Belum Terima (应收收入)</h3>
+            
+            <div class="maksud-box">
+                <p><strong>BM:</strong> Hasil yang sepatutnya diterima bagi tempoh perakaunan semasa tetapi masih belum diterima sehingga akhir tempoh perakaunan.</p>
+                <p><strong>华语:</strong> 本期应该收到的收入，但到期末<strong>还没收到钱</strong>。</p>
+            </div>
+
+            <!-- Interaktif 1 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 1: Apakah kesan item ini terhadap Hasil Tahun Semasa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbt1', 'correct', '✅ BETUL! Tambahkan ke Hasil tahun semasa kerana perkhidmatan telah diberikan pada tahun ini.')">A. MENAMBAHKAN Hasil</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbt1', 'wrong', '❌ SALAH! Walaupun wang belum dapat, hasil ini tetap hak milik tahun ini.')">B. MENGURANGKAN Hasil</button>
+                <div id="hbt1-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 2 -->
+            <div class="quiz-section">
+                <div class="quiz-title">💡 Uji Minda 2: Dalam PKK, item ini direkodkan sebagai apa?</div>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbt2', 'correct', '✅ BETUL! Ini adalah hak perniagaan untuk menuntut wang pendapatan tersebut.')">A. Aset Semasa</button>
+                <button class="quiz-option-btn" onclick="checkQuiz('hbt2', 'wrong', '❌ SALAH! Ini hak penerimaan wang perniagaan, bukan hutang perniagaan.')">B. Liabiliti Semasa</button>
+                <div id="hbt2-feedback" class="feedback-text"></div>
+            </div>
+
+            <!-- Interaktif 3 -->
+            <button class="accordion-btn" onclick="toggleAccordion(this)">🔍 Klik untuk lihat Contoh Situasi & Penerangan</button>
+            <div class="accordion-content">
+                <p><strong>Contoh:</strong> Faedah atas simpanan bank bagi tahun ini berjumlah RM200 belum dikreditkan atau diterima daripada pihak bank.<br>
+                <i>Contoh Akaun:</i> Faedah Belum Terima, Komisen Belum Terima, Sewa Belum Terima.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi Penukaran Tab
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Fungsi Kuiz Interaktif untuk Tab Nota
+        function checkQuiz(quizId, status, message) {
+            const feedbackEl = document.getElementById(quizId + '-feedback');
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerText = message;
+            
+            if (status === 'correct') {
+                feedbackEl.style.color = '#2e7d32';
+            } else {
+                feedbackEl.style.color = '#c62828';
+            }
+        }
+
+        // Fungsi Accordion untuk Buka/Tutup Contoh
+        function toggleAccordion(btn) {
+            var content = btn.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+
+        // Logic Drag & Drop (Tab 1)
+        const draggables = document.querySelectorAll('.draggable');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const sourceContainer = document.getElementById('source-container');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', draggable.id);
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('hovered');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hovered');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('hovered');
+                
+                const id = e.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                
+                if (zone.children.length > 0) {
+                    sourceContainer.appendChild(zone.children[0]);
+                }
+
+                zone.appendChild(draggableElement);
+            });
+        });
+
+        sourceContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        sourceContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const draggableElement = document.getElementById(id);
+            sourceContainer.appendChild(draggableElement);
+        });
+
+        // Semakan Jawapan Drag & Drop
+        function checkAnswers() {
+            let score = 0;
+            let total = dropZones.length;
+
+            dropZones.forEach(zone => {
+                const targetValue = zone.getAttribute('data-target');
+                const child = zone.querySelector('.draggable');
+                const correctAnswerBadge = zone.nextElementSibling;
+
+                correctAnswerBadge.style.display = 'block';
+
+                if (child) {
+                    const childValue = child.getAttribute('data-value');
+                    if (childValue === targetValue) {
+                        score++;
+                        zone.style.borderColor = '#4CAF50';
+                        zone.style.backgroundColor = '#e8f5e9';
+                    } else {
+                        zone.style.borderColor = '#f44336';
+                        zone.style.backgroundColor = '#ffebee';
+                    }
+                } else {
+                    zone.style.borderColor = '#f44336';
+                    zone.style.backgroundColor = '#ffebee';
+                }
+            });
+
+            const resultText = document.getElementById('result');
+            if (score === total) {
+                resultText.style.color = '#4CAF50';
+                resultText.innerText = `恭喜你！全部答对了 (${score}/${total})！`;
+            } else {
+                resultText.style.color = '#f44336';
+                resultText.innerText = `得分: ${score} / ${total}。请参考下方显示正确答案！`;
+            }
+        }
+    </script>
+</body>
+</html>
