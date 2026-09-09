@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prinsip Perakaunan Tingkatan 4 - Penutupan Akaun</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; color: #2c3e50; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .cover-header { text-align: center; border-bottom: 3px double #3498db; padding-bottom: 25px; margin-bottom: 30px; }
+        .cover-header h1 { color: #1a5276; font-size: 2em; margin: 0 0 10px 0; text-transform: uppercase; }
+        .cover-header h2 { color: #2980b9; font-size: 1.4em; margin: 0 0 15px 0; }
+        .student-info { display: flex; gap: 20px; justify-content: center; background-color: #ebf5fb; padding: 15px; border-radius: 8px; border: 1px solid #aed6f1; margin-bottom: 30px; }
+        .info-group { display: flex; align-items: center; gap: 10px; font-weight: bold; }
+        .info-input { padding: 8px 12px; border: 1px solid #bdc3c7; border-radius: 5px; font-size: 1em; }
+        .instructions { background-color: #e8f4f8; border-left: 5px solid #3498db; padding: 12px 18px; margin-bottom: 20px; border-radius: 4px; font-size: 1.05em; }
+        
+        .drag-container { background-color: #f8f9fa; border: 2px dashed #bdc3c7; padding: 18px; border-radius: 8px; margin-bottom: 25px; min-height: 60px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; }
+        .draggable { background-color: #3498db; color: white; padding: 8px 15px; border-radius: 20px; cursor: grab; font-weight: bold; font-size: 0.95em; user-select: none; }
+        .draggable:hover { background-color: #2980b9; }
+        .draggable.dragging { opacity: 0.4; }
+        
+        .dropzone { display: inline-block; min-width: 180px; height: 36px; border-bottom: 2px solid #2c3e50; background-color: #eef2f5; vertical-align: middle; margin: 3px 5px; border-radius: 4px 4px 0 0; text-align: center; line-height: 36px; font-weight: bold; color: #2c3e50; }
+        .dropzone.hovered { background-color: #d6eaf8; border-bottom-style: dashed; }
+        .dropzone.filled { background-color: #e8f8f5; border-bottom-color: #27ae60; }
+        
+        .part-section { margin-bottom: 35px; padding: 25px; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff; }
+        .part-title { color: #1a5276; margin-top: 0; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; font-size: 1.3em; }
+        .question-item { margin-bottom: 18px; font-size: 1.05em; line-height: 1.8; }
+        .hidden { display: none; }
+        
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 6px; font-weight: bold; display: none; line-height: 1.6; }
+        .feedback.correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        button.btn-check { background-color: #27ae60; color: white; border: none; padding: 12px 24px; font-size: 1em; border-radius: 6px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        button.btn-check:hover { background-color: #219150; }
+        ol { padding-left: 20px; }
+        li { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="cover-header">
+        <h1>Prinsip Perakaunan Tingkatan 4</h1>
+        <h2>Modul 7: Penutupan Akaun Hasil, Belanja dan Akaun Nyata</h2>
+        <div class="student-info">
+            <div class="info-group">
+                <label for="student-name">Nama Pelajar:</label>
+                <input type="text" id="student-name" class="info-input" placeholder="Masukkan nama anda">
+            </div>
+            <div class="info-group">
+                <label for="student-class">Kelas:</label>
+                <input type="text" id="student-class" class="info-input" placeholder="Contoh: 4 Cemerlang">
+            </div>
+        </div>
+    </div>
+
+    <!-- BAHAGIAN 1: KONSEP PENUTUPAN AKAUN -->
+    <div id="part1" class="part-section">
+        <h2 class="part-title">Bahagian 1: Konsep Penutupan Akaun</h2>
+        <div class="instructions">
+            <strong>Arahan:</strong> Seret (drag) tempat pemindahan/penutupan yang betul dari Kotak Jawapan ke dalam tempat kosong.
+        </div>
+
+        <div class="drag-container" id="options-part1">
+            <div class="draggable" draggable="true" id="opt-p1-1" data-value="perdagangan">Akaun Perdagangan</div>
+            <div class="draggable" draggable="true" id="opt-p1-2" data-value="untung-rugi">Akaun Untung Rugi</div>
+            <div class="draggable" draggable="true" id="opt-p1-3" data-value="dibawa">dibawa ke tempoh akan datang (Baki h/b)</div>
+        </div>
+
+        <div class="question-item">
+            1. <strong>Komponen Jualan Bersih dan Kos Jualan</strong> dipindahkan ke dalam <span class="dropzone" data-accept="perdagangan" id="dz-p1-1"></span>.
+        </div>
+        <div class="question-item">
+            2. <strong>Komponen Hasil dan Belanja Lain</strong> dipindahkan ke dalam <span class="dropzone" data-accept="untung-rugi" id="dz-p1-2"></span>.
+        </div>
+        <div class="question-item">
+            3. <strong>Akaun Nyata (Aset, Liabiliti, Modal)</strong> tidak ditutup sebaliknya bakinya <span class="dropzone" data-accept="dibawa" id="dz-p1-3"></span>.
+        </div>
+
+        <button class="btn-check" onclick="checkPart1()">Semak Jawapan Bahagian 1</button>
+        <div id="feedback-p1" class="feedback"></div>
+    </div>
+
+    <!-- BAHAGIAN 2: PENGELASAN PEMINDAHAN CATATAN PENUTUPAN -->
+    <div id="part2" class="part-section hidden">
+        <h2 class="part-title">Bahagian 2: Pengelasan Pemindahan Akaun Pada Akhir Tempoh Kewangan</h2>
+        <div class="instructions">
+            <strong>Arahan:</strong> Seret (drag) akaun-akaun berikut dari Kotak Jawapan dan kelaskan mengikut tempat pemindahan penutupan akaun yang tepat.
+        </div>
+
+        <div class="drag-container" id="options-part2">
+            <!-- Akaun Perdagangan -->
+            <div class="draggable" draggable="true" id="opt-p2-1" data-value="perdagangan">Akaun Belian</div>
+            <div class="draggable" draggable="true" id="opt-p2-2" data-value="perdagangan">Akaun Pulangan Jualan</div>
+            <div class="draggable" draggable="true" id="opt-p2-3" data-value="perdagangan">Akaun Angkutan Masuk</div>
+            <div class="draggable" draggable="true" id="opt-p2-4" data-value="perdagangan">Akaun Pulangan Belian</div>
+
+            <!-- Akaun Untung Rugi -->
+            <div class="draggable" draggable="true" id="opt-p2-5" data-value="untung-rugi">Akaun Diskaun Diberi</div>
+            <div class="draggable" draggable="true" id="opt-p2-6" data-value="untung-rugi">Akaun Sewa Diterima</div>
+            <div class="draggable" draggable="true" id="opt-p2-7" data-value="untung-rugi">Akaun Promosi</div>
+            <div class="draggable" draggable="true" id="opt-p2-8" data-value="untung-rugi">Akaun Belanja Am</div>
+            <div class="draggable" draggable="true" id="opt-p2-9" data-value="untung-rugi">Akaun Alat Tulis</div>
+
+            <!-- Akaun Nyata (Tidak Ditutup) -->
+            <div class="draggable" draggable="true" id="opt-p2-10" data-value="nyata">Akaun Perabot (Baki h/b)</div>
+        </div>
+
+        <div class="question-item">
+            <ol>
+                <li>
+                    <strong>Dipindahkan ke Akaun Perdagangan:</strong><br>
+                    • <span class="dropzone" data-target="perdagangan" id="dz-p2-1"></span><br>
+                    • <span class="dropzone" data-target="perdagangan" id="dz-p2-2"></span><br>
+                    • <span class="dropzone" data-target="perdagangan" id="dz-p2-3"></span><br>
+                    • <span class="dropzone" data-target="perdagangan" id="dz-p2-4"></span>
+                </li>
+                <br>
+                <li>
+                    <strong>Dipindahkan ke Akaun Untung Rugi:</strong><br>
+                    • <span class="dropzone" data-target="untung-rugi" id="dz-p2-5"></span><br>
+                    • <span class="dropzone" data-target="untung-rugi" id="dz-p2-6"></span><br>
+                    • <span class="dropzone" data-target="untung-rugi" id="dz-p2-7"></span><br>
+                    • <span class="dropzone" data-target="untung-rugi" id="dz-p2-8"></span><br>
+                    • <span class="dropzone" data-target="untung-rugi" id="dz-p2-9"></span>
+                </li>
+                <br>
+                <li>
+                    <strong>Tidak Ditutup (Akaun Nyata / Baki h/b):</strong><br>
+                    • <span class="dropzone" data-target="nyata" id="dz-p2-10"></span>
+                </li>
+            </ol>
+        </div>
+
+        <button class="btn-check" onclick="checkPart2()">Semak Jawapan Bahagian 2</button>
+        <div id="feedback-p2" class="feedback"></div>
+    </div>
+</div>
+
+<script>
+    let draggedElement = null;
+
+    function initDraggables() {
+        const draggables = document.querySelectorAll('.draggable');
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                draggedElement = draggable;
+                draggable.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', draggable.id);
+            });
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+                draggedElement = null;
+            });
+        });
+    }
+
+    function initDropzones() {
+        const dropzones = document.querySelectorAll('.dropzone');
+        dropzones.forEach(dropzone => {
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('hovered');
+            });
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('hovered');
+            });
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('hovered');
+                if (draggedElement) {
+                    if (dropzone.children.length > 0) {
+                        const existingChild = dropzone.children[0];
+                        const parentContainer = dropzone.closest('.part-section').querySelector('.drag-container');
+                        parentContainer.appendChild(existingChild);
+                    }
+                    dropzone.appendChild(draggedElement);
+                    dropzone.classList.add('filled');
+                }
+            });
+        });
+    }
+
+    function checkPart1() {
+        const studentName = document.getElementById('student-name').value.trim();
+        const feedback = document.getElementById('feedback-p1');
+
+        if (!studentName) {
+            alert('Sila masukkan Nama Pelajar di bahagian atas dahulu!');
+            document.getElementById('student-name').focus();
+            return;
+        }
+
+        const dz1 = document.getElementById('dz-p1-1').firstElementChild;
+        const dz2 = document.getElementById('dz-p1-2').firstElementChild;
+        const dz3 = document.getElementById('dz-p1-3').firstElementChild;
+
+        if (!dz1 || !dz2 || !dz3) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Sila lengkapkan kesemua tempat kosong dalam Bahagian 1!';
+            return;
+        }
+
+        if (dz1.getAttribute('data-value') === 'perdagangan' &&
+            dz2.getAttribute('data-value') === 'untung-rugi' &&
+            dz3.getAttribute('data-value') === 'dibawa') {
+            
+            feedback.style.display = 'block';
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `Tahniah <strong>${studentName}</strong>! Jawapan Bahagian 1 tepat.<br>Sila teruskan ke Bahagian 2.`;
+            document.getElementById('part2').classList.remove('hidden');
+            document.getElementById('part2').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Terdapat jawapan yang tidak tepat. Sila semak semula!';
+        }
+    }
+
+    function checkPart2() {
+        const studentName = document.getElementById('student-name').value;
+        const feedback = document.getElementById('feedback-p2');
+        const dropzones = document.querySelectorAll('#part2 .dropzone');
+
+        let allFilled = true;
+        let incorrectCount = 0;
+
+        dropzones.forEach(dz => {
+            const child = dz.firstElementChild;
+            if (!child) {
+                allFilled = false;
+            } else {
+                const itemType = child.getAttribute('data-value');
+                const targetType = dz.getAttribute('data-target');
+                if (itemType !== targetType) {
+                    incorrectCount++;
+                }
+            }
+        });
+
+        if (!allFilled) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = 'Sila lengkapkan kesemua jawapan dalam Bahagian 2!';
+            return;
+        }
+
+        if (incorrectCount === 0) {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `SYABAS DAN TAHNIAH <strong>${studentName}</strong>! 🎉<br>
+            Anda telah berjaya mengelaskan kesemua akaun penutupan dengan betul mengikut modul perakaunan!`;
+        } else {
+            feedback.style.display = 'block';
+            feedback.className = 'feedback incorrect';
+            feedback.textContent = `Terdapat ${incorrectCount} jawapan yang salah diletakkan. Sila semak perbezaan antara Akaun Perdagangan, Akaun Untung Rugi, dan Akaun Nyata!`;
+        }
+    }
+
+    initDraggables();
+    initDropzones();
+</script>
+
+</body>
+</html>
